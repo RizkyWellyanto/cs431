@@ -1,11 +1,3 @@
-<head>
-...
-    <script type="text/javascript"
-            src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-    </script>
-...
-</head>
-
 2.(20Points) DAC/ADC questions
 
 a.(10 points) Compute the digital value you need to generate 3.1 volts assuming
