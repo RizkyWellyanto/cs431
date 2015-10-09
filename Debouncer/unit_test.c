@@ -43,7 +43,7 @@ void main(){
             
             button_read(&button1, PORTEbits.RE8);
             
-            if(button_debounced(&button1))
+            if(button_debounced(&button1) != UNSTABLE)
             {
                 ++pressCounter;
                 lcd_printf("button 1 has been pressed:\n");
