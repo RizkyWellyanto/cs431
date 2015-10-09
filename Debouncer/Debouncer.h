@@ -18,6 +18,8 @@ extern "C" {
 #ifndef NUM_SAMPLES
 #define NUM_SAMPLES       10
 #endif
+
+#define UNSTABLE          2
     
 typedef struct {
     uint8_t samples[NUM_SAMPLES] = {0};
