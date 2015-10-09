@@ -17,7 +17,7 @@ void button_read(Debouncer * button, uint8_t Port_Reading)
         button->sampleIdx = 0;
 }
 
-uint8_t button_debounced(Debouncer* button) 
+uint8_t button_debounce(Debouncer* button) 
 {
     button->stable = 1;
     uint8_t i = 1;
