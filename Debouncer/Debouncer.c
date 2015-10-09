@@ -19,7 +19,6 @@ void button_read(Debouncer * button, uint8_t Port_Reading)
 
 uint8_t button_debounced(Debouncer* button) 
 {
-    uint8_t previousDebouncedValue = button->debouncedValue;
     button->stable = 1;
     uint8_t i = 1;
     for(; i < NUM_SAMPLES; ++i)
@@ -27,7 +26,7 @@ uint8_t button_debounced(Debouncer* button)
         if (button->samples[0] ^ button->samples[i] == 1)
         {
             button->stable = 0;
-            return previousDebouncedValue;
+            return UNSTABLE;
         }
     }
     
