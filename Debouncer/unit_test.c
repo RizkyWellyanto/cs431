@@ -23,35 +23,39 @@ _FGS(GCP_OFF);
 
 
 void main(){
-	//Init LCD
-	__C30_UART=1;	
-	lcd_initialize();
-	lcd_clear();
-	lcd_locate(0,0);
-	lcd_printf("Hello World!");	
+    //Init LCD
+    __C30_UART=1;	
+    lcd_initialize();
+    lcd_clear();
+    lcd_locate(0,0);
+    lcd_printf("Hello World!");	
     
     uint16_t loopCounter = 0;
     uint8_t pressCounter = 0;
     Debouncer button1;
 	
-	while(1){
+    while(1){
         ++loopCounter;
         
-		if (loopCounter == 5000) // samples the button status every 2k loops, TODO: use real timer
+        if (loopCounter == 5000) // samples the button status every 2k loops, TODO: use real timer
         {
             loopCounter = 0;
             
             button_read(&button1, PORTEbits.RE8);
-            
-            if(button_debounced(&button1) != UNSTABLE)
+            if (button_debounce(&button1) != UNSTABLE)
             {
-                ++pressCounter;
-                lcd_printf("button 1 has been pressed:\n");
-                lcd_printf("%d times\n", pressCounter);
+                if (button_debounce(&button1) == 0 )
+                {
+                	++pressCounter;
+                	lcd_printf("button 1 has been pressed:\n");
+                	lcd_printf("%d times\n", pressCounter);
+                }
+                else
+                {
+                	// nothing to do
+                }
             }
         }
-        
-        
-	}
+    }
 }
 
