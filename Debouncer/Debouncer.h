@@ -32,7 +32,7 @@ extern void button_init(Debouncer * button);
 
 extern void button_read(Debouncer * button, uint8_t Port_Reading);
 
-extern uint8_t button_debounced(Debouncer* button);
+extern uint8_t button_debounce(Debouncer* button);
 
 
 #ifdef	__cplusplus
