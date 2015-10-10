@@ -5,7 +5,7 @@
 #include <libpic30.h>
 
 #include "lcd.h"
-#inlcude "led.h"
+#include "led.h"
 
 /* Initial configuration by EE */
 // Primary (XT, HS, EC) Oscillator with PLL
