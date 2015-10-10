@@ -102,6 +102,8 @@ void main(){
     uint16_t Y;
     uint16_t Ymin;
     uint16_t Ymax;
+    uint16_t Xpulse;
+    uint16_t Ypulse;
     
     uint16_t freezeFlag;
     uint16_t loopCounter;
@@ -147,6 +149,9 @@ void main(){
 
             Xmin = (Xmin < X) ? Xmin : X;
             Xmax = (Xmax > X) ? Xmax : X;
+            
+            Xpulse = 1024 * (X - Xmin)/(Xmax - Xmin);
+            motor_set_duty(CHANNEL_X, Xpulse);
 
             // read Y
             while(!AD2CON1bits.DONE); // wait for conversion to finish
@@ -155,6 +160,9 @@ void main(){
 
             Ymin = (Ymin < Y) ? Ymin : Y;
             Ymax = (Ymax > Y) ? Ymax : Y;
+            
+            Ypulse = 1024 * (Y - Ymin)/(Ymax - Ymin);
+            motor_set_duty(CHANNEL_Y, Ypulse);
         }
         
         if(loopCounter == 1000){
@@ -162,5 +170,5 @@ void main(){
             lcd_locate(2, 1);
             lcd_printf("Min X = %u, Max X = %u\r Real-time X = %u\n", Xmix, Xmax, X);
         }    
-	}
+    }
 }
