@@ -41,10 +41,10 @@ void motor_set_duty(uint8_t chan, uint16_t duty_us)
 {
     if (chan == CHANNEL_X)
     {
-        OC8RS = HIGH - duty_ms; /* Load OCRS: next pwm duty cycle */
+        OC8RS = HIGH - duty_us; /* Load OCRS: next pwm duty cycle */
     }
     else if (chan == CHANNEL_Y)
     {
-        OC7RS = HIGH - duty_ms; /* Load OCRS: next pwm duty cycle */
+        OC7RS = HIGH - duty_us; /* Load OCRS: next pwm duty cycle */
     }  
 }
