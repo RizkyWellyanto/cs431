@@ -85,7 +85,7 @@ void main(){
             {
                 if (button_debounce(&button1) == 0 ) 
                 {
-                	++pressedCounter;
+                    ++pressedCounter;
                     lcd_locate(5,10);
                     lcd_printf("Button pressed: %d 0x%x\n", pressedCounter, pressedCounter);
                 }
