@@ -8,8 +8,7 @@
 #include "lcd.h"
 #include "Debouncer.h"
 
-#define CLK 12800000
-#define TIMER_INTERVEL 0.001 * CLK 
+#define TIMER_INTERVEL 12800
 
 /* Initial configuration by EE */
 // Primary (XT, HS, EC) Oscillator with PLL
