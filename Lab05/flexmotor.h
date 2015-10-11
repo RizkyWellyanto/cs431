@@ -37,15 +37,15 @@ extern "C" {
 #endif
 
 #ifndef LOW
-#define LOW 0.955*PER // 0.9ms -> 0 degree
+#define LOW 0.955*PERIOD // 0.9ms -> 0 degree
 #endif
 
 #ifndef MID
-#define MID 0.925*PER // 1.5ms -> 90 degree
+#define MID 0.925*PERIOD // 1.5ms -> 90 degree
 #endif
 
 #ifndef HIGH
-#define HIGH 0.895*PER // 2.1ms -> 180 degree
+#define HIGH 0.895*PERIOD // 2.1ms -> 180 degree
 #endif
 
 extern void motor_init(uint8_t chan);
