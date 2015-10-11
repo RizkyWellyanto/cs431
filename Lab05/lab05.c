@@ -1,11 +1,12 @@
 #include <p33Fxxxx.h>
 //do not change the order of the following 3 definitions
-#define FCY 12800000UL 
+#define FCY 12800000UL
 #include <stdio.h>
 #include <libpic30.h>
+#include "types.h"
 
 #include "lcd.h"
-#include "led.h"
+//#include "led.h"
 #include "Debouncer.h"
 #include "flexmotor.h"
 
@@ -16,13 +17,13 @@
 _FOSCSEL(FNOSC_PRIPLL);
 
 // OSC2 Pin Function: OSC2 is Clock Output - Primary Oscillator Mode: XT Crystal
-_FOSC(OSCIOFNC_OFF & POSCMD_XT); 
+_FOSC(OSCIOFNC_OFF & POSCMD_XT);
 
 // Watchdog Timer Enabled/disabled by user software
 _FWDT(FWDTEN_OFF);
 
 // Disable Code Protection
-_FGS(GCP_OFF);  
+_FGS(GCP_OFF);
 
 void initADCs(){
     // ADC1 for X
@@ -31,7 +32,7 @@ void initADCs(){
     SETBIT(TRISEbits.TRISE8); //set TRISE RE8 to input
     CLEARBIT(AD1PCFGHbits.PCFG20); //set AD1 AN20 input pin as analog
     //Configure AD1CON1
-    CLEARBIT(AD1CON1bits.AD12B) //set 10b Operation Mode
+    CLEARBIT(AD1CON1bits.AD12B); //set 10b Operation Mode
     AD1CON1bits.FORM = 0; //set integer output
     AD1CON1bits.SSRC = 0x7; //set automatic conversion
     //Configure AD1CON2
@@ -42,31 +43,27 @@ void initADCs(){
     AD1CON3bits.ADCS = 0x2; //Tad = 3Tcy (Time cycles)
     //Leave AD1CON4 at its default value
     //enable ADC
-    SETBIT(AD1CON1bits.ADON);    
-    AD1CHS0bits.CH0SA = 0x004; //set ADC to Sample AN4 pin, Joystick X-axis
-    SETBIT(AD1CON1bits.SAMP); //start to sample
-    
+    SETBIT(AD1CON1bits.ADON);
+
     // ADC2 for Y
     CLEARBIT(AD2CON1bits.ADON);
 
-    SETBIT(TRISBbits.TRISB4); 
-    CLEARBIT(AD2PCFGLbits.PCFG4); 
+    SETBIT(TRISBbits.TRISB4);
+    CLEARBIT(AD2PCFGLbits.PCFG4);
     SETBIT(TRISBbits.TRISB5);
     CLEARBIT(AD2PCFGLbits.PCFG5);
     //Configure AD2CON1
-    CLEARBIT(AD2CON1bits.AD12B); 
-    AD2CON1bits.FORM = 0; 
+    CLEARBIT(AD2CON1bits.AD12B);
+    AD2CON1bits.FORM = 0;
     AD2CON1bits.SSRC = 0x7;
-    
-    AD2CON2 = 0; 
+
+    AD2CON2 = 0;
     //Configure AD1CON3
-    CLEARBIT(AD2CON3bits.ADRC); 
-    AD2CON3bits.SAMC = 0x1F; 
-    AD2CON3bits.ADCS = 0x2; 
+    CLEARBIT(AD2CON3bits.ADRC);
+    AD2CON3bits.SAMC = 0x1F;
+    AD2CON3bits.ADCS = 0x2;
 
     SETBIT(AD2CON1bits.ADON);
-    AD2CHS0bits.CH0SA = 0x005; //set ADC to Sample AN5 pin, Joystick Y-axis
-    SETBIT(AD2CON1bits.SAMP); //start to sample
 }
 
 
@@ -74,161 +71,186 @@ void initCounterTimer3() { // for debouncing
     CLEARBIT(T3CONbits.TON); // Disable Timer
     CLEARBIT(T3CONbits.TCS); // Select internal instruction cycle clock
     CLEARBIT(T1CONbits.TGATE); // Disable gated timer mode
-    
+
     TMR3 = 0x0000; // clear register
-    
+
     SETBIT(T3CONbits.TON); // turn on Timer3
 }
 
-void main(){
+int main(){
     //Init LCD
-    __C30_UART=1;	
+    __C30_UART=1;
     lcd_initialize();
     lcd_clear();
-    
-    lcd_locate(0,0);
-    lcd_printf("Lab05\n");
-    
+
     initCounterTimer3();
     initADCs();
-    
+
     motor_init(CHANNEL_X);
     motor_init(CHANNEL_Y);
-    
+
+    SETBIT(TRISEbits.TRISE8); // set trigger as task toggle
+    SETBIT(AD1PCFGHbits.PCFG20);
+    SETBIT(TRISDbits.TRISD10); // set thumb as reset
+
+    SETBIT(TRISEbits.TRISE8); // set trigger as input
+    SETBIT(AD1PCFGHbits.PCFG20);
+    SETBIT(TRISDbits.TRISD10);
+
     uint16_t X;
-    uint16_t Xmin;
-    uint16_t Xmax;
-    
+    uint16_t Xmin = 0xffff;
+    uint16_t Xmax = 0x0000;
+
     uint16_t Y;
     uint16_t Ymin;
     uint16_t Ymax;
     uint16_t Xpulse;
     uint16_t Ypulse;
-    
-    uint16_t loopCounter;
-    
-    Debouncer button1;
+
+    uint16_t loopCounter = 0;
+
+    Debouncer button1; // trigger
     uint16_t button1Status;
-    
-    // get initialized values
-    //while(!AD1CON1bits.DONE); //wait for conversion to finish
-    //CLEARBIT(AD1CON1bits.DONE); //MUST HAVE! clear conversion done bit
-    //Xmin = Xmax = X = ADC1BUF0;
-    
-    //while(!AD2CON1bits.DONE); //wait for conversion to finish
-    //CLEARBIT(AD2CON1bits.DONE); //MUST HAVE! clear conversion done bit
-    //Ymin = Ymax = Y = ADC2BUF0;
-    
-    enum taskFlags {MEASURE_MAX_X = 0, MEASURE_MIN_X, MEASURE_MAX_Y, MEASURE_MIN_Y, SERVO_X, SERVO_Y} taskFlag = MEASURE_MIN_X;
+
+    Debouncer button2; // thumb
+    uint16_t button2Status;
+
+
+    enum taskFlags {MEASURE_MAX_X, MEASURE_MIN_X, MEASURE_MAX_Y,
+                    MEASURE_MIN_Y, SERVO_X, SERVO_Y}
+    taskFlag = MEASURE_MAX_X;
+
+
+    if(loopCounter == 2000)
+    {
+        lcd_locate(5,0);
+        lcd_printf("%d", taskFlag);
+    }
 
     while(1)
     {
         ++loopCounter;
-        if (TMR3 >= TIMER_INTERVEL) // samples the button status every 2k loops
+        if (TMR3 >= TIMER_INTERVEL) // debouncing period
         {
             TMR3 = 0x0000;
-            
+
             button_read(&button1, PORTEbits.RE8); // Joy-stick trigger button
             button1Status = button_debounced(&button1);
             if (button1Status != UNSTABLE && button1Status != UNCHANGED)
             {
-                if (button_debounce(&button1) == 0 )
+                if (button1Status == 0 )
                 {
-                	if (taskFlag++ >= SERVO_Y)
-                	{
-                		lcd_locate(0,7);
-                		lcd_printf("All Done!");
-                	}
+                    if (taskFlag++ >= SERVO_Y)
+                    {
+                        lcd_locate(0,7);
+                        lcd_printf("All Done!");
+                    }
+                }
+            }
+
+            button_read(&button2, PORTDbits.RD10); // Joy-stick thumb button
+            button2Status = button_debounced(&button2);
+            if (button2Status != UNSTABLE && button2Status != UNCHANGED)
+            {
+                if (button2Status == 0 )
+                {
+                    taskFlag = MEASURE_MAX_X;
                 }
             }
         }
-        
+
         // read X
-        while(!AD1CON1bits.DONE); // wait for conversion to finish
-        CLEARBIT(AD1CON1bits.DONE); // MUST HAVE! clear conversion done bit
-        X = ADC1BUF0;
-        
-        // read Y
-        while(!AD2CON1bits.DONE); // wait for conversion to finish
-        CLEARBIT(AD2CON1bits.DONE); // MUST HAVE! clear conversion done bit
-        Y = ADC2BUF0;
-        
-        switch (taskFlag)
+        if (loopCounter % 2000 == 0)
         {
-        	case MEASURE_MAX_X :
-        	    Xmax = (Xmax > X) ? Xmax : X;
-        	    lcd_locate(0,1);
-        	    if (loopCounter >= 2000)
-        	    {
-        	    	loopCounter = 0;
-        	    	lcd_printf("Max X: %d", Xmax);
-        	    }
-        	    Xpulse = 1024 * (X - Xmin)/(Xmax - Xmin);
-                motor_set_duty(CHANNEL_X, Xpulse);
-        	    break;
-        	    
-        	case MEASURE_MIN_X :
-        	    Xmin = (Xmin < X) ? Xmin : X;
-        	    lcd_locate(0,2);
-        	    if (loopCounter >= 2000)
-        	    {
-        	    	loopCounter = 0;
-        	    	lcd_printf("Min X: %d", Xmin);
-        	    }
-        	    break;
-        	
-        	case MEASURE_MAX_Y :
-        	    Ymax = (Ymax < Y) ? Ymax : Y;
-        	    lcd_locate(0,3);
-        	    if (loopCounter >= 2000)
-        	    {
-        	    	loopCounter = 0;
-        	    	lcd_printf("Max Y: %d", Ymax);
-        	    }
-        	    break;
-        	    
-        	case MEASURE_MIN_Y :
-        	    Ymi=n = (Ymin < Y) ? Ymin : Y;
-        	    lcd_locate(0,4);
-        	    if (loopCounter >= 2000)
-        	    {
-        	    	loopCounter = 0;
-        	    	lcd_printf("Min Y: %d", Ymin);
-        	    }
-        	    break;
-        	    
-        	default :
-        	    break;
-        }
-        if(!freezeFlag)
-        {
-            // read X
+            AD1CHS0bits.CH0SA = 0x004; //set ADC to Sample AN4 pin, Joystick X-axis
+            SETBIT(AD1CON1bits.SAMP); //start to sample
             while(!AD1CON1bits.DONE); // wait for conversion to finish
             CLEARBIT(AD1CON1bits.DONE); // MUST HAVE! clear conversion done bit
             X = ADC1BUF0;
+        }
 
-            Xmin = (Xmin < X) ? Xmin : X;
-            Xmax = (Xmax > X) ? Xmax : X;
-            
-            Xpulse = 1024 * (X - Xmin)/(Xmax - Xmin);
-            motor_set_duty(CHANNEL_X, Xpulse);
-
-            // read Y
+        // read Y
+        if (loopCounter % 2000 == 0)
+        {
+            AD2CHS0bits.CH0SA = 0x005; //set ADC to Sample AN5 pin, Joystick Y-axis
+            SETBIT(AD2CON1bits.SAMP); //start to sample
             while(!AD2CON1bits.DONE); // wait for conversion to finish
             CLEARBIT(AD2CON1bits.DONE); // MUST HAVE! clear conversion done bit
-            Y = ADC2BUF0;
-
-            Ymin = (Ymin < Y) ? Ymin : Y;
-            Ymax = (Ymax > Y) ? Ymax : Y;
-            
-            Ypulse = 1024 * (Y - Ymin)/(Ymax - Ymin);
-            motor_set_duty(CHANNEL_Y, Ypulse);
+            Y = ADC2BUF0; 
         }
-        
-        if(loopCounter == 1000){
-            loopCounter = 0;
-            lcd_locate(2, 1);
-            lcd_printf("Min X = %u, Max X = %u\r Real-time X = %u\n", Xmix, Xmax, X);
-        }    
+
+        switch (taskFlag)
+        {
+            case MEASURE_MAX_X :
+
+                if (loopCounter >= 2000)
+                {
+                    loopCounter = 0;
+                    lcd_locate(0,1);
+                    lcd_printf("Xmax:%d   ", X);
+                    Xmax = (Xmax > X) ? Xmax : X;
+                }
+                break;
+
+            case MEASURE_MIN_X :
+
+                if (loopCounter >= 2000)
+                {
+                    loopCounter = 0;
+                    lcd_locate(0,2);
+                    lcd_printf("Xmin:%d   ", X);
+                    Xmin = (Xmin < X) ? Xmin : X;
+                }
+
+                break;
+
+            case MEASURE_MAX_Y :      
+
+                if (loopCounter >= 2000)
+                {
+                    loopCounter = 0;
+                    lcd_locate(0,3);
+                    lcd_printf("Ymax:%d   ", Y);
+                    Ymax = (Ymax > Y) ? Ymax : Y;
+                }
+                break;
+
+            case MEASURE_MIN_Y :
+
+                if (loopCounter >= 2000)
+                {
+                    loopCounter = 0;
+                    lcd_locate(0,4);
+                    lcd_printf("Ymin:%d   ", Y);
+                    Ymin = (Ymin < Y) ? Ymin : Y;
+                }
+                break;
+
+            case SERVO_X :
+                Xpulse = (X - Xmin) * 140L/(Xmax - Xmin) + 220;
+                
+                if (loopCounter >= 2000)
+                {
+                    loopCounter = 0;
+                    motor_set_duty(CHANNEL_X, Xpulse);
+                    lcd_locate(0,5);
+                    lcd_printf("Xpwm:%d", X);
+                }
+
+            case SERVO_Y :
+                Ypulse = (Y - Ymin) * 140L/(Ymax - Ymin) + 220;
+              
+                if (loopCounter >= 2000)
+                {
+                    loopCounter = 0;
+                    motor_set_duty(CHANNEL_Y, Ypulse);
+                    lcd_locate(0,6);
+                    lcd_printf("Ypwm:%d", Y);
+                }
+            default :
+        	    break;
+        }
     }
+    
+    return 0;
 }
