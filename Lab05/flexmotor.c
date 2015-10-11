@@ -21,34 +21,31 @@ void motor_init(uint8_t chan)
 
    if(chan == CHANNEL_X )
    {
-        CLEARBIT(TRISDbits.TRISD7); // Set OC8 as output
-        OC8R = MID; // Set the initial to mid position
-        OC8RS = MID; // Load OCRS: next pwm duty cycle
-        OC8CON = 0x0006; // Set OC8: PWM, no fault check, Timer2
+        CLEARBIT(TRISDbits.TRISD7); // Set OC7 as output
+        OC7R = MID; // Set the initial to mid position
+        OC7RS = MID; // Load OCRS: next pwm duty cycle
+        OC7CON = 0x0006; // Set OC7: PWM, no fault check, Timer2
         SETBIT(T2CONbits.TON); // Turn Timer 2 on
     }
     else if (chan == CHANNEL_Y)
     {
-        CLEARBIT(TRISDbits.TRISD6); // Set OC8 as output
-        OC7R = MID; // Set the initial throw to mid position
-        OC7RS = MID; // Load OCRS: next pwm duty cycle
-        OC7CON = 0x0006;
+        CLEARBIT(TRISDbits.TRISD8); // Set OC8 as output
+        OC8R = MID; // Set the initial throw to mid position
+        OC8RS = MID; // Load OCRS: next pwm duty cycle
+        OC8CON = 0x0006; // Set OC8: PWM, no fault check, Timer2
         SETBIT(T2CONbits.TON); // Turn Timer 2 on
     }
 }
 
 void motor_set_duty(uint8_t chan, uint16_t duty)
 {
-    // uint16_t duty = HIGH - duty_us * 1e-6 * 128e5 / 64;
-
+    
     if (chan == CHANNEL_X)
     {
-        // OC8R = duty;
-        OC8RS = PERIOD - duty; /* Load OCRS: next pwm duty cycle */
+        OC7RS = PERIOD - duty; /* Load OCRS: next pwm duty cycle */
     }
     else if (chan == CHANNEL_Y)
     {
-        // OC7R = duty;
-        OC7RS = PERIOD - duty; /* Load OCRS: next pwm duty cycle */
+        OC8RS = PERIOD - duty; /* Load OCRS: next pwm duty cycle */
     }
 }
