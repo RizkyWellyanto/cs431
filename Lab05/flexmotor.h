@@ -23,8 +23,8 @@ extern "C" {
 #define FCY 12800000UL
 #endif
 
-#ifndef PER
-#define PER 4000 // 0.02*FCY/64 // 20ms, required by CS431
+#ifndef PERIOD
+#define PERIOD 4000 // 0.02*FCY/64 // 20ms, required by CS431
 #endif
 
 
@@ -49,7 +49,7 @@ extern "C" {
 #endif
 
 extern void motor_init(uint8_t chan);
-extern void motor_set_duty(uint8_t chan, uint16_t duty_us);
+extern void motor_set_duty(uint8_t chan, uint16_t duty);
 
 #ifdef	__cplusplus
 }
