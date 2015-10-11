@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Debouncer.h
  * Author: boliu
  *
@@ -16,23 +16,24 @@ extern "C" {
 
 // Macros
 #ifndef NUM_SAMPLES
-#define NUM_SAMPLES       10
+#define NUM_SAMPLES       4
 #endif
 
 #define UNSTABLE          2
-    
+#define UNCHANGED          3
+
 typedef struct {
-    uint8_t samples[NUM_SAMPLES] = {0};
-    uint8_t sampleIdx = 0;
-    uint8_t debouncedValue = 0;
-    uint8_t stable = 0;
+    uint8_t samples[NUM_SAMPLES];
+    uint8_t sampleIdx;
+    uint8_t previousValue;
+    uint8_t stable;
 } Debouncer;
 
 extern void button_init(Debouncer * button);
 
 extern void button_read(Debouncer * button, uint8_t Port_Reading);
 
-extern uint8_t button_debounce(Debouncer* button);
+extern uint8_t button_debounced(Debouncer* button);
 
 
 #ifdef	__cplusplus
