@@ -9,7 +9,7 @@
 #include "Debouncer.h"
 #include "flexmotor.h"
 
-#define TIMER_INTERVEL 12800
+#define TIMER_INTERVEL 0x8fff
 
 /* Initial configuration by EE */
 // Primary (XT, HS, EC) Oscillator with PLL
@@ -75,19 +75,19 @@ void initCounterTimer3() { // for debouncing
     CLEARBIT(T3CONbits.TCS); // Select internal instruction cycle clock
     CLEARBIT(T1CONbits.TGATE); // Disable gated timer mode
     
-    TMR3 = 0; // clear register
+    TMR3 = 0x0000; // clear register
     
     SETBIT(T3CONbits.TON); // turn on Timer3
 }
 
 void main(){
-	//Init LCD
-	__C30_UART=1;	
-	lcd_initialize();
-	lcd_clear();
-	lcd_locate(0,0);
+    //Init LCD
+    __C30_UART=1;	
+    lcd_initialize();
+    lcd_clear();
     
-    lcd_printf("Bo Liu, Daniel Hsu, Ron Wright\n");
+    lcd_locate(0,0);
+    lcd_printf("Lab05\n");
     
     initCounterTimer3();
     initADCs();
@@ -105,41 +105,101 @@ void main(){
     uint16_t Xpulse;
     uint16_t Ypulse;
     
-    uint16_t freezeFlag;
     uint16_t loopCounter;
     
     Debouncer button1;
+    uint16_t button1Status;
     
     // get initialized values
-    while(!AD1CON1bits.DONE); //wait for conversion to finish
-    CLEARBIT(AD1CON1bits.DONE); //MUST HAVE! clear conversion done bit
-    Xmin = Xmax = X = ADC1BUF0;
+    //while(!AD1CON1bits.DONE); //wait for conversion to finish
+    //CLEARBIT(AD1CON1bits.DONE); //MUST HAVE! clear conversion done bit
+    //Xmin = Xmax = X = ADC1BUF0;
     
-    while(!AD2CON1bits.DONE); //wait for conversion to finish
-    CLEARBIT(AD2CON1bits.DONE); //MUST HAVE! clear conversion done bit
-    Ymin = Ymax = Y = ADC2BUF0;
+    //while(!AD2CON1bits.DONE); //wait for conversion to finish
+    //CLEARBIT(AD2CON1bits.DONE); //MUST HAVE! clear conversion done bit
+    //Ymin = Ymax = Y = ADC2BUF0;
+    
+    enum taskFlags {MEASURE_MAX_X = 0, MEASURE_MIN_X, MEASURE_MAX_Y, MEASURE_MIN_Y, SERVO_X, SERVO_Y} taskFlag = MEASURE_MIN_X;
 
     while(1)
     {
         ++loopCounter;
-        if (TMR3 == TIMER_INTERVEL) // samples the button status every 2k loops
+        if (TMR3 >= TIMER_INTERVEL) // samples the button status every 2k loops
         {
-            TMR3 = 0;
+            TMR3 = 0x0000;
             
             button_read(&button1, PORTEbits.RE8); // Joy-stick trigger button
-            if (button_debounce(&button1) != UNSTABLE)
+            button1Status = button_debounced(&button1);
+            if (button1Status != UNSTABLE && button1Status != UNCHANGED)
             {
                 if (button_debounce(&button1) == 0 )
                 {
-                	freezeFlag = 0;
-                }
-                else
-                {
-                	freezeFlag = 1;
+                	if (taskFlag++ >= SERVO_Y)
+                	{
+                		lcd_locate(0,7);
+                		lcd_printf("All Done!");
+                	}
                 }
             }
         }
         
+        // read X
+        while(!AD1CON1bits.DONE); // wait for conversion to finish
+        CLEARBIT(AD1CON1bits.DONE); // MUST HAVE! clear conversion done bit
+        X = ADC1BUF0;
+        
+        // read Y
+        while(!AD2CON1bits.DONE); // wait for conversion to finish
+        CLEARBIT(AD2CON1bits.DONE); // MUST HAVE! clear conversion done bit
+        Y = ADC2BUF0;
+        
+        switch (taskFlag)
+        {
+        	case MEASURE_MAX_X :
+        	    Xmax = (Xmax > X) ? Xmax : X;
+        	    lcd_locate(0,1);
+        	    if (loopCounter >= 2000)
+        	    {
+        	    	loopCounter = 0;
+        	    	lcd_printf("Max X: %d", Xmax);
+        	    }
+        	    Xpulse = 1024 * (X - Xmin)/(Xmax - Xmin);
+                motor_set_duty(CHANNEL_X, Xpulse);
+        	    break;
+        	    
+        	case MEASURE_MIN_X :
+        	    Xmin = (Xmin < X) ? Xmin : X;
+        	    lcd_locate(0,2);
+        	    if (loopCounter >= 2000)
+        	    {
+        	    	loopCounter = 0;
+        	    	lcd_printf("Min X: %d", Xmin);
+        	    }
+        	    break;
+        	
+        	case MEASURE_MAX_Y :
+        	    Ymax = (Ymax < Y) ? Ymax : Y;
+        	    lcd_locate(0,3);
+        	    if (loopCounter >= 2000)
+        	    {
+        	    	loopCounter = 0;
+        	    	lcd_printf("Max Y: %d", Ymax);
+        	    }
+        	    break;
+        	    
+        	case MEASURE_MIN_Y :
+        	    Ymi=n = (Ymin < Y) ? Ymin : Y;
+        	    lcd_locate(0,4);
+        	    if (loopCounter >= 2000)
+        	    {
+        	    	loopCounter = 0;
+        	    	lcd_printf("Min Y: %d", Ymin);
+        	    }
+        	    break;
+        	    
+        	default :
+        	    break;
+        }
         if(!freezeFlag)
         {
             // read X
