@@ -26,29 +26,10 @@ _FWDT(FWDTEN_OFF);
 // Disable Code Protection
 _FGS(GCP_OFF);
 
-void initADC2(){
-    // ADC2 for Joystick axis
-    CLEARBIT(AD2CON1bits.ADON);
-
-    SETBIT(TRISBbits.TRISB4); //
-    CLEARBIT(AD2PCFGLbits.PCFG4); // AD2 AN20 input pin set analog
-    SETBIT(TRISBbits.TRISB5);
-    CLEARBIT(AD2PCFGLbits.PCFG5);
-    //Configure AD2CON1
-    CLEARBIT(AD2CON1bits.AD12B);
-    AD2CON1bits.FORM = 0;
-    AD2CON1bits.SSRC = 0x7;
-
-    AD2CON2 = 0;
-    //Configure AD1CON3
-    CLEARBIT(AD2CON3bits.ADRC);
-    AD2CON3bits.SAMC = 0x1F;
-    AD2CON3bits.ADCS = 0x2;
-
-    SETBIT(AD2CON1bits.ADON);
-}
-
 int main(){
+    
+    INIT: 
+    
     //Init LCD
     __C30_UART=1;
     lcd_initialize();
@@ -57,7 +38,7 @@ int main(){
     lcd_locate(0,0);
     lcd_printf("*Lab05*");
 
-    initADC2();
+    init_adc2();
 
     motor_init(CHANNEL_X); // using Timer2
     motor_init(CHANNEL_Y); // using Timer2
@@ -115,22 +96,7 @@ int main(){
             {
                 if (thumbStatus == 0 )
                 { // reset and start over again
-                    lcd_clear();
-                    lcd_locate(0,0);
-                    lcd_printf("*Lab05*");
-                    initADC2();
-
-                    motor_init(CHANNEL_X); // using Timer2
-                    motor_init(CHANNEL_Y); // using Timer2
-
-                    Xmin = 0xffff;
-                    Xmax = 0x0000;
-
-                    Ymin = 0xffff;
-                    Ymax = 0x0000;
-
-                    loopCounter = 0;
-                    taskFlag = MEASURE_MAX_X;
+                    goto INIT;
                 }
             }
         }
