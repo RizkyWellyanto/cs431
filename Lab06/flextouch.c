@@ -39,8 +39,6 @@ void init_adc1(){
     SETBIT(AD1CON1bits.ADON);
 }
 
-
-
 //Initialize the touch screen
 void touch_init(){
     //set up the I/O pins E1, E2, E3 to be output pins
@@ -53,15 +51,14 @@ void touch_init(){
 void touch_select_dim(uint8_t dim) {
 
     if(dim == DIM_X) { 
-        // set up the I/O pins E1, E2, E3 for X
-        CLEARBIT(PORTEbits.RE1);
-        SETBIT(PORTEbits.RE2);
-        SETBIT(PORTEbits.RE3);
+        CLEARBIT(LATEbits.LATE1); // use Latch registers
+        SETBIT(LATEbits.LATE2);
+        SETBIT(LATEbits.LATE3);
     } else if (dim == DIM_Y) { 
         // set up the I/O pins E1, E2, E3 for Y
-        SETBIT(PORTEbits.RE1);
-        CLEARBIT(PORTEbits.RE2);
-        CLEARBIT(PORTEbits.RE3);
+        SETBIT(LATEbits.LATE1); // use Latch registers
+        CLEARBIT(LATEbits.LATE2);
+        CLEARBIT(LATEbits.LATE3);
     }
 }
 
@@ -77,12 +74,18 @@ uint16_t touch_adc(){
 uint16_t touch_read(uint8_t dim) {
     
     if(dim == DIM_X) { 
+	
+		/* The LATx register associated with an I/O pin 
+		 * eliminates the problems that can occur with
+		 * read-modify-write instructions. 
+		 * dsPIC33F.10 - I/O Ports page 4
+		 */
         // set up the I/O pins E1, E2, E3 for X
-        CLEARBIT(PORTEbits.RE1);
-        SETBIT(PORTEbits.RE2);
-        SETBIT(PORTEbits.RE3);
-        
-        AD1CHS0bits.CH0SA = 0x000E; // AN15: X dimension
+        CLEARBIT(LATEbits.LATE1); // use Latch registers
+        SETBIT(LATEbits.LATE2);
+        SETBIT(LATEbits.LATE3);
+		
+        AD1CHS0bits.CH0SA = 0x000F; // AN15: X dimension
         SETBIT(AD1CON1bits.SAMP); // start to sample
         while(!AD1CON1bits.DONE); // wait for conversion to finish
         CLEARBIT(AD1CON1bits.DONE); // MUST HAVE! clear conversion done bit
@@ -91,9 +94,9 @@ uint16_t touch_read(uint8_t dim) {
         
     } else if (dim == DIM_Y) { 
         // set up the I/O pins E1, E2, E3 for Y
-        SETBIT(PORTEbits.RE1);
-        CLEARBIT(PORTEbits.RE2);
-        CLEARBIT(PORTEbits.RE3);
+        SETBIT(LATEbits.LATE1); // use Latch registers
+        CLEARBIT(LATEbits.LATE2);
+        CLEARBIT(LATEbits.LATE3);
                 
         AD1CHS0bits.CH0SA = 0x0009; // AN9: Y dimension
         SETBIT(AD1CON1bits.SAMP); // start to sample
