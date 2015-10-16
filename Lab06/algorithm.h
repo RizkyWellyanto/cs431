@@ -24,6 +24,8 @@ extern uint16_t partition(uint16_t * arr, uint16_t len, uint16_t pivot);
 
 extern uint16_t nth_element(uint16_t *arr, uint16_t len, uint16_t n);
 
+extern uint16_t find_median(uint16_t *arr, uint16_t len);
+
 #ifdef	__cplusplus
 }
 #endif
