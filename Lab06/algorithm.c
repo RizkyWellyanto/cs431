@@ -86,3 +86,8 @@ uint16_t nth_element(uint16_t *arr, uint16_t len, uint16_t n)
         }
     }
 }
+
+uint16_t find_median(uint16_t *arr, uint16_t len)
+{
+    return nth_element(arr, len/2);
+}
