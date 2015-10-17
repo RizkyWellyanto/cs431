@@ -13,10 +13,9 @@ void init_adc1(){
     // 0. Disable ADC1
     CLEARBIT(AD1CON1bits.ADON);
 
-    // 1. set input pins <- delegate to reading code
-    // SETBIT(TRISEbits.TRISE1); // set input. ??? which port
-    // SETBIT(TRISEbits.TRISE2); // set input. ??? which port
-    // SETBIT(TRISEbits.TRISE3); // set input. ??? which port
+    // 1. set input pins 
+    SETBIT(TRISBbits.TRISB15); // set input. AN15
+    SETBIT(TRISBbits.TRISB9); // set input. AN9
     
     // 2. set analog pins
     CLEARBIT(AD1PCFGLbits.PCFG15); // set analog. X is hardwired to AN15
