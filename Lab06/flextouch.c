@@ -41,10 +41,15 @@ void init_adc1(){
 
 //Initialize the touch screen
 void touch_init(){
-    //set up the I/O pins E1, E2, E3 to be output pins
+    // set up the I/O pins E1, E2, E3 to be output pins
     CLEARBIT(TRISEbits.TRISE1); //I/O pin set to output
     CLEARBIT(TRISEbits.TRISE2); //I/O pin set to output
     CLEARBIT(TRISEbits.TRISE3); //I/O pin set to output
+    
+    // enter standby mode
+    SETBIT(LATEbits.LATE1); // use Latch registers
+    SETBIT(LATEbits.LATE2);
+    CLEARBIT(LATEbits.LATE3);
 }
 
 // select the dimension for the touch Screen
@@ -54,11 +59,13 @@ void touch_select_dim(uint8_t dim) {
         CLEARBIT(LATEbits.LATE1); // use Latch registers
         SETBIT(LATEbits.LATE2);
         SETBIT(LATEbits.LATE3);
+        AD1CHS0bits.CH0SA = 0x000F; //set ADC to sample AN15
     } else if (dim == DIM_Y) { 
         // set up the I/O pins E1, E2, E3 for Y
         SETBIT(LATEbits.LATE1); // use Latch registers
         CLEARBIT(LATEbits.LATE2);
         CLEARBIT(LATEbits.LATE3);
+        AD1CHS0bits.CH0SA = 0x0009; // set ADC to sample AN9
     }
 }
 
