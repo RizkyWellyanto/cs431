@@ -14,19 +14,17 @@
 _FOSCSEL(FNOSC_PRIPLL);
 
 // OSC2 Pin Function: OSC2 is Clock Output - Primary Oscillator Mode: XT Crystal
-_FOSC(OSCIOFNC_OFF & POSCMD_XT); 
+_FOSC(OSCIOFNC_OFF & POSCMD_XT);
 
 // Watchdog Timer Enabled/disabled by user software
 _FWDT(FWDTEN_OFF);
 
 // Disable Code Protection
-_FGS(GCP_OFF);  
+_FGS(GCP_OFF);
 
 uint16_t flag = 1;
 
-//
-// Initialize timer 3 to 10 ms period with interrupt enabled.
-//
+// Timer 1
 void init_timer1()
 {
    CLEARBIT(T1CONbits.TON);   // Disable Timer
@@ -36,23 +34,29 @@ void init_timer1()
    T1CONbits.TCKPS = 0b10;    //Set Prescaler (1:256)
    PR1 = 2000;                //Set Period
    IPC0bits.T1IP = 0x01;      //Set IPL
+   CLEARBIT(IEC0bits.T1IE);     //Enable INT
    CLEARBIT(IFS0bits.T1IF);   //Clear IF
-   //SETBIT(IEC0bits.T1IE);     //Enable INT
    SETBIT(T1CONbits.TON);     //Enable Timer
 }
 
-//
-// T1 interrupt called each 10 ms.
-//
+// T1 interrupt every 10 ms.
 void
-__attribute__ (( __interrupt__ )) _T1Interrupt(void)
+__attribute__ (( __interrupt__, auto_psv)) _T1Interrupt(void)
 {
    flag = 1;
    CLEARBIT(IFS0bits.T1IF);
 }
 
+void wait()
+{
+    flag = 1;
+    init_timer1();
+    while(!flag); // spins
+    flag = 0;
+}
 
-void main(){
+
+int main(){
 	//Init LCD
 	__C30_UART=1;
 	lcd_initialize();
@@ -64,41 +68,51 @@ void main(){
     const uint16_t NUM_SAMPLES = 5;
     uint16_t samples[NUM_SAMPLES];
     uint16_t i = 0;
+    uint16_t loopCounter = 0;
 
     init_adc1();
     touch_init();
+    init_timer1();
 
-        
-	while(1){
+    while(1){
 
-        while(!flag); // spins
-        flag = 0;
-        
-        // sample X
-        AD1CHS0bits.CH0SA = 0x00F; // X pin AN15
-        touch_select_dim(DIM_X);
-        
-        for (i = 0; i < NUM_SAMPLES; ++i) {
-            samples[i] = touch_adc();
+        if(loopCounter++ >= 2000) {
+            loopCounter = 0;
         }
-        
-        lcd_clear_row(1);
-        lcd_locate(0, 1);
-        lcd_printf("X = %d  ", find_median(samples));
-        
-        while(!flag); // spins
-        flag = 0;
+
+        wait();
+
+        // sample X
+        //AD1CHS0bits.CH0SA = 0x00F; // X pin AN15
+        //touch_select_dim(DIM_X);
+
+        for (i = 0; i < NUM_SAMPLES; ++i) {
+            wait();
+            samples[i] = touch_read(DIM_X);
+        }
+
+        if(loopCounter == 2000) {
+            //lcd_clear_row(1);
+            lcd_locate(0, 1);
+            lcd_printf("X = %u        ", find_median(samples, 5));
+        }
+
+        wait();
         
         // sample Y
-        AD1CHS0bits.CH0SA = 0x009; // Y pin AN9
-        touch_select_dim(DIM_Y);
+        //AD1CHS0bits.CH0SA = 0x009; // Y pin AN9
+        //touch_select_dim(DIM_Y);
 
         for (i = 0; i < NUM_SAMPLES; ++i) {
-            samples[i] = touch_adc();
+            wait();
+            samples[i] = touch_read(DIM_Y);
         }
-        
-        lcd_clear_row(2);
-        lcd_locate(0, 2);
-        lcd_printf("Y = %d  ", find_median(samples));
+
+        if(loopCounter == 2000) {
+            lcd_locate(0, 2);
+            lcd_printf("Y = %u        ", find_median(samples, 5));
+        }
     }
+
+    return 0;
 }
