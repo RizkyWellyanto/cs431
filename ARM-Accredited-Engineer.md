@@ -58,7 +58,6 @@ Architecture version numbers are independent of processor names.
 
 In order to address different needs of a wide range of application areas, architecture
 version 7 is divided into three profiles: 
-
 * Cortex-A Processors: ARMv7-A Architecture
 * Cortex-R Processors: ARMv7-R Architecture
 * Cortex-M Processors: ARMv7-M & ARMv6-M Architectures
@@ -67,14 +66,23 @@ version 7 is divided into three profiles:
 
 ### About ARM official references:
 e.g. *ARMv7-M Architecture Reference Manual (reference 1)* (**must read**) contains: 
-
 * Programmer’s model
 * Instruction set
 * Memory model
 * Debug architecture
 
 e.g. * Technical Reference Manual (TRM)* contains:
-
 * Processor specific information, such as interface details and instruction timing.
 
+![armv6m](https://cloud.githubusercontent.com/assets/14265605/10616042/b8ff81ee-7728-11e5-8143-4da91312bc27.png)
+
+All the Cortex-M processors support Thumb-2 technology and support
+different subsets of the Thumb ISA.
+* Thumb-2 has both 16-bit and 32-bit instructions.
+ * Thumb-2 Technology is a very important feature of ARMv7. 
+
+## Processor naming
+
+ 
+ 
 
