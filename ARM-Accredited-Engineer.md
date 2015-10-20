@@ -58,22 +58,23 @@ Architecture version numbers are independent of processor names.
 
 In order to address different needs of a wide range of application areas, architecture
 version 7 is divided into three profiles: 
-• Cortex-A Processors: ARMv7-A Architecture
-• Cortex-R Processors: ARMv7-R Architecture
-• Cortex-M Processors: ARMv7-M & ARMv6-M Architectures
+
+* Cortex-A Processors: ARMv7-A Architecture
+* Cortex-R Processors: ARMv7-R Architecture
+* Cortex-M Processors: ARMv7-M & ARMv6-M Architectures
 
 ![evolution-of-arm-architecture](https://cloud.githubusercontent.com/assets/14265605/10615814/79606356-7727-11e5-9fb4-cc1a4c509ff8.png)
 
 ### About ARM official references:
-e.g. *ARMv7-M Architecture Reference Manual (reference 1)* (**must read**): 
-contains the following key areas:
-• Programmer’s model
-• Instruction set
-• Memory model
-• Debug architecture
+e.g. *ARMv7-M Architecture Reference Manual (reference 1)* (**must read**) contains: 
 
-e.g. * Technical Reference Manual (TRM)*:
-contains:
-• Processor specific information, such as interface details and instruction timing.
+* Programmer’s model
+* Instruction set
+* Memory model
+* Debug architecture
+
+e.g. * Technical Reference Manual (TRM)* contains:
+
+* Processor specific information, such as interface details and instruction timing.
 
 
