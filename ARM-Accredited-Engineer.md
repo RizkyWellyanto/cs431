@@ -137,10 +137,14 @@ Using this arrangement, we can reduce the duration of high-priority interrupt ha
 so that lower priority interrupt services can get served quicker. At the same time,
 the processor can still enter sleep mode to save power when no servicing is needed.
 
+## Multi-taskiing systems
+Some tasks that can take a long time to execute might need to be processed concurrently.
+* a Real-Time Operating System(RTOS) can be used to handle the task scheduling.
+* Besides task scheduling, RTOSs also have many other features such as semaphores, message passing, etc.
 
+![rtos](https://cloud.githubusercontent.com/assets/14265605/10622747/092081de-774f-11e5-87b9-5c8ac922728b.png)
 
-
-
+### Data types in C programming
 
 
 
