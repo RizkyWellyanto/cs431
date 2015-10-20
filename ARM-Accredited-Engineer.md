@@ -117,5 +117,36 @@ GCC:
 ![gcc](https://cloud.githubusercontent.com/assets/14265605/10621980/cb766ef2-7749-11e5-9dec-4ace92c5018b.png)
 
 
- 
+## Software flow
+
+### Polling
+Super-loop polling to service multiple processes:
+![polling](https://cloud.githubusercontent.com/assets/14265605/10622430/278e4586-774d-11e5-932f-24565b68396a.png)
+Cons:
+* can be cubersome when the application gets more complex.
+* difficult to define priorities.
+* energy is wasted during the polling when service is not required.
+
+### Interrupt driven
+Sleep to reduce power, when needs a service, wake up the processor:
+![interrupt](https://cloud.githubusercontent.com/assets/14265605/10622521/dae5f700-774d-11e5-9ab2-9d0065485ffa.png)
+
+When parts of the service is not urgent, we can combine polling and interrupt-driven methods:
+![polling-interrupt-comb](https://cloud.githubusercontent.com/assets/14265605/10622567/0a554b30-774e-11e5-9cd7-34feed65364e.png)
+Using this arrangement, we can reduce the duration of high-priority interrupt handlers
+so that lower priority interrupt services can get served quicker. At the same time,
+the processor can still enter sleep mode to save power when no servicing is needed.
+
+
+
+
+
+
+
+
+
+
+
+
+
 
