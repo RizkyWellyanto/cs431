@@ -10,3 +10,6 @@ Harvard bus architecture with unified memory space(***Modified Harward architect
  * loosen the strict separation between code and data, while still supporting the higher performance concurrent data and instruction access of the Harvard architecture.
 * Von Neumann architecture: same address space - code can also be accessed and treated the same as data, and vice versa. 
 
+## we need different processors for different applications. 
+![cortex-m](https://cloud.githubusercontent.com/assets/14265605/10613766/3b478bea-771c-11e5-93f5-a8bb329533b2.png)
+
