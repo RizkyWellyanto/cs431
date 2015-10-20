@@ -13,3 +13,7 @@ Harvard bus architecture with unified memory space(***Modified Harward architect
 ## we need different processors for different applications. 
 ![cortex-m](https://cloud.githubusercontent.com/assets/14265605/10613766/3b478bea-771c-11e5-93f5-a8bb329533b2.png)
 
+## ARM processor v.s. microcontroller
+In a typical microcontroller design, the processor (ARM Cortex M) takes only a small part of the silicon area.
+![microcontroller](https://cloud.githubusercontent.com/assets/14265605/10613949/3e06ae3c-771d-11e5-9461-61bb785ea3a9.png)
+
