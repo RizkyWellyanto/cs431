@@ -74,6 +74,10 @@ e.g. *ARMv7-M Architecture Reference Manual (reference 1)* (**must read**) conta
 e.g. * Technical Reference Manual (TRM)* contains:
 * Processor specific information, such as interface details and instruction timing.
 
+e.g. the *Cortex-M3/M4 Devices Generic User Guides* (references 2 and 3) covers:
+* the programming model of the processors
+* various application notes.
+
 ![armv6m](https://cloud.githubusercontent.com/assets/14265605/10616042/b8ff81ee-7728-11e5-8143-4da91312bc27.png)
 
 All the Cortex-M processors support Thumb-2 technology and support
@@ -83,6 +87,35 @@ different subsets of the Thumb ISA.
 
 ## Processor naming
 
- 
+# Chapter 2: Introduction to Embedded Software Development
+Typically, only 10% of the silicon die is occupied by the ARM processor.
+To use a Cortex-M microcontroller, we only need to understand:
+* the processors, e.g. how to use the interrupt features (read this book).
+* the programmer's model of the peripherals (read the datasheet of your microcontroller).
+
+Most microcontroller vendors
+provide C header files and driver libraries for their microcontrollers, developed with the *Cortex Microcontroller Software Interface Standard (**CMSIS**)*.
+
+In most cases, the processor does all the work of controlling the peripherals and
+handles the system management.
+
+The illustrations in this book are mostly based on the **Keil** Microcontroller
+Development Kit (MDK-ARM) because of its popularity.
+
+In order to help microcontroller software developers, microcontroller vendors usually
+provide header files and C codes that include:
+* Definitions of peripheral registers
+* Access functions for configuring and accessing the peripherals
+
+The development flow:
+![development-flow](https://cloud.githubusercontent.com/assets/14265605/10621414/572a0a8e-7746-11e5-819c-a0168ae34ddc.png)
+
+The compilation process:
+![compilatioin](https://cloud.githubusercontent.com/assets/14265605/10621852/f023f6ee-7748-11e5-965e-9f7eec949be2.png)
+
+GCC:
+![gcc](https://cloud.githubusercontent.com/assets/14265605/10621980/cb766ef2-7749-11e5-9dec-4ace92c5018b.png)
+
+
  
 
