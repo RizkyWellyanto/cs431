@@ -17,3 +17,43 @@ Harvard bus architecture with unified memory space(***Modified Harward architect
 In a typical microcontroller design, the processor (ARM Cortex M) takes only a small part of the silicon area.
 ![microcontroller](https://cloud.githubusercontent.com/assets/14265605/10613949/3e06ae3c-771d-11e5-9461-61bb785ea3a9.png)
 
+## PI-licencing and Vendors
+After a company licenses the Cortex-M processor design, ARM provides the
+design source code of the processor in a language called Verilog-HDL (Hardware
+Description Language). The design engineers in these companies then add their
+own design blocks like peripherals and memories, and use various EDA tools to
+convert the whole design from Verilog-HDL and various other forms into a transistor
+level chip layout.
+
+## ARM processors
+![arm-processors](https://cloud.githubusercontent.com/assets/14265605/10615541/18744108-7726-11e5-82f1-3aeec5eb1bb9.png)
+
+**Cortex-A**
+* Application processors that are designed to handle complex
+applications such as high-end embedded operating systems (OSs) (e.g., iOS,
+Android, Linux, and Windows). These applications require the highest
+processing power, virtual memory system support with memory management
+units (MMUs), and, optionally, enhanced Java support and a secure program
+execution environment. Example products include high-end smartphones,
+tablets, televisions, and even computing servers.
+
+**Cortex-R**
+* Real-time, high-performance processors targeted primarily at the
+higher end of the real-time market e these are applications, such as hard drive
+controllers, baseband controllers for mobile communications, and automotive
+systems, in which high processing power and high reliability are essential and for
+which low latency and determinism are important.
+
+**Cortex-M**
+* Processors targeting smaller scale applications such as
+microcontrollers and mixed signal design, where criteria like low cost, low
+power, energy efficiency, and low interrupt latency are important. At the same
+time, the processor design has to be easy to use and able to provide deterministic
+behavior as required in many real-time control systems.
+
+architecture version numbers are independent of processor names.
+
+## Thumb ISA
+![thumb](https://cloud.githubusercontent.com/assets/14265605/10615649/9b91ca24-7726-11e5-9868-fe62f88d80cb.png)
+
+
