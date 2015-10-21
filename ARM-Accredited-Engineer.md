@@ -292,4 +292,13 @@ This allows low-cost debug adaptors to be developed which work for
 multiple development toolchains.
 
 ### Areas of standardization in **CMSIS-Core**
-
+From a software development point of view, the CMSIS-Core standardizes a number
+of areas:
+* Standardized definitions for the processor’s peripherals.
+ * registers in **NVIC**
+ * a system tick timer in the processor (**SysTick**)
+ * an optional Memory Protection Unit (**MPU**)
+ * various programmable registers in the System Control Block (**SCB**)
+ * some software programmable registers related to debug features
+* Standardized access functions to access processor’s features
+ * 
