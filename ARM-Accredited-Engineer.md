@@ -145,6 +145,17 @@ Some tasks that can take a long time to execute might need to be processed concu
 ![rtos](https://cloud.githubusercontent.com/assets/14265605/10622747/092081de-774f-11e5-87b9-5c8ac922728b.png)
 
 ### Data types in C programming
+The integer is always 32-bit in the ARM architecture.
+
+Conventions in ARM programming:
+
+|Terms|Size|
+|:---:|:--:|
+|Byte | 8-bit|
+|Half word|16-bit|
+|Word|32-bit|
+|Double word|64-bit|
+
 
 
 
