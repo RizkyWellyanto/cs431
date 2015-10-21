@@ -362,6 +362,8 @@ You can download the latest version of the CMSIS source package from [arm.com](h
 # Chapter 3: Techinical Overview
 
 ## General information
+
+### Processor type
 ARM Cortex-M are 32-bit **RISC** processors
 * 32-bit registers
 * 32-bit internal data path
@@ -386,6 +388,8 @@ and then written back to memory using a number of separate instructions.
 The details of the registers inside the
 processors are commonly known as a programmer’s model.
 
+### Processor architecture
+
 ### Instruction set
 **Thumb-2** Technology: allows mixture of 16-bit and 32-bit instructions for high code density and high efficiency.
 
@@ -394,20 +398,33 @@ processors are commonly known as a programmer’s model.
 
 Bus Interfaces on the Cortex-M3 and Cortex-M4 Processors:
 * **I-CODE**: Primarily for program memory: Instruction fetch and vector fetch for
-address 0x0 to 0x1FFFFFFF. Based on AMBA 3.0 AHB Lite bus
+address 0x0 to 0x1FFFFFFF. Based on **AMBA** 3.0 AHB Lite bus
 protocol.
 * **D-CODE**: Primarily for program memory: Data and debugger accesses for
-address 0x0 to 0x1FFFFFFF. Based on AMBA 3.0 AHB Lite bus
+address 0x0 to 0x1FFFFFFF. Based on **AMBA** 3.0 AHB Lite bus
 protocol.
 * **System**: Primarily for RAM and peripherals: Any accesses from address
 0x20000000 to 0xFFFFFFFF (apart from PPB regions). Based on
-AMBA 3.0 AHB Lite bus protocol.
+**AMBA** 3.0 AHB Lite bus protocol.
 * **PPB**: External Private Peripheral Bus (PPB): For private debug components
 on system level from address 0xE0040000 to 0xE00FFFFF. Based on
-AMBA 3.0 APB protocol.
+**AMBA** 3.0 APB protocol.
 * **DAP**: Debug Access Port (DAP) interface: For debugger accesses generated
 from the debug interface module to any memory locations including
 system memory and debug components. Based on the ARM
 CoreSight debug architecture.
+
+The bus interfaces on the Cortex-M processors are 32-bit, and based on
+the *Advanced Microcontroller Bus Architecture (**AMBA**)* standard. 
+**AMBA** contains a collection of several bus protocol specifications.
+
+### Memory system
+The Cortex-M3/4 processors do not have memories
+* no SRAM, no cache
+* Instead, they come with a generic on-chip bus interface, so microcontroller vendors can add their own memory system to their design.
+ * typically, the microcontroller vendor will need to add:
+  * Program memory, typically flash
+  * Data memory, typically SRAM
+  * Peripherals
 
 
