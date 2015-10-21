@@ -258,6 +258,38 @@ GPIO_reset(GPIOA); /* Reset GPIO A */
 GPIO_reset(GPIOB); /* Reset GPIO B */
 ```
 
-## Microcontoller interfaces
+## The Cortex microcontroller software interface standard (**CMSIS**)
+**CMSIS-Core** (Cortex-M processor support
+* a set of APIs for application or
+middleware developers to access the features on the Cortex-Mprocessor regardless
+of the microcontroller devices or toolchain used. Currently the CMSIS processor
+support includes the Cortex-M0, Cortex-M0+, Cortex-M3, and Cortex-M4 processors
+and SecurCore products like SC000 and SC300. Users of the Cortex-M1
+can use the Cortex-M0 version because they share the same architecture.
 
+**CMSIS-DSP library**： 
+* in 2010 the CMSIS DSP library was released, supporting
+many common DSP operations such as FFT and filters. The CMSIS-DSP is
+intended to allow software developers to create DSP applications on Cortex-M
+microcontrollers easily.
+
+**CMSIS-SVD**:
+* the CMSIS System View Description is an XML-based file
+format to describe peripheral set in microcontroller products. Debug tool vendors
+can then use the CMSIS SVD files prepared by the microcontroller vendors to
+construct peripheral viewers quickly.
+
+**CMSIS-RTOS**:
+* an API specification for embedded OS
+running on Cortex-M microcontrollers. This allows middleware and application
+code to be developed for multiple embedded OS platforms, and allows better
+reusability and portability.
+
+**CMSIS-DAP**:
+* the **CMSIS-DAP** (Debug Access Port) is a reference design for a
+debug interface adaptor, which supports USB to JTAG/Serial protocol conversions.
+This allows low-cost debug adaptors to be developed which work for
+multiple development toolchains.
+
+### Areas of standardization in **CMSIS-Core**
 
