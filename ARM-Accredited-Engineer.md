@@ -187,6 +187,12 @@ void GPIOA_reset(void) /* Reset GPIO A */
   return;
 }
 ```
+But this coding style is not scalable for larger projects:
+* each register address definition increases code size
+* multiple instantiations of the same peripheral: definition are repeated => increases code size
+* the reset function is not generalized enough
+
+Solution: [Common practice for delcaring peripheral registers]()
 
 Typically, a peripheral requires an initialization process before it can be used. This might include some of the following steps (*All these initialization steps are carried out by programming peripheral registers in various peripheral blocks.*):
 * Programming the clock control circuitry to enable the clock signal connection to
@@ -200,6 +206,8 @@ characteristics such as output type (voltage, pull up/down, open drain, etc.).
  * use driver functions provided by the vendor to reduce the programming work.
 * Interrupt configuration.
 
+## Common practice for delcaring peripheral registers
+*used by almost all Cortex-M microcontroller device-driver packages*
 
 
 
