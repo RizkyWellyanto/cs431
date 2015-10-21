@@ -39,7 +39,9 @@ typedef struct {
 
 extern void button_init(Debouncer * button);
 
-extern void button_read(Debouncer * button, uint8_t Port_Reading);
+extern void button_sample(Debouncer * button, uint8_t Port_Reading); // get all samples in a single call
+
+extern void button_read(Debouncer * button, uint8_t Port_Reading); // get one sample per call
 
 extern uint8_t button_debounced(Debouncer* button);
 
