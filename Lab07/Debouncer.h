@@ -7,6 +7,14 @@
 
 #ifndef DEBOUNCER_H
 #define	DEBOUNCER_H
+#include <p33Fxxxx.h>
+//do not change the order of the following 3 definitions
+#ifndef FCY
+#define FCY 12800000UL
+#endif
+#include <stdio.h>
+#include <libpic30.h>
+
 #include "types.h"
 
 #ifdef	__cplusplus
