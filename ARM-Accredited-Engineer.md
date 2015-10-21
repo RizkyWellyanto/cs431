@@ -427,4 +427,16 @@ The Cortex-M3/4 processors do not have memories
   * Data memory, typically SRAM
   * Peripherals
 
+main bus interface protocol:
+* **AHB Lite** (Advanced High-performance Bus)
+* **APB** (Advanced Peripheral Bus)
+
+### Interrupt and exception support
+The address location of the **NVIC** is memory-mapped and is fixed.
+
+## Features of Cotrex-M3/4
+
+
+
+
 
