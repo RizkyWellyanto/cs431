@@ -4,6 +4,7 @@ Only when all array elements are the same, the button status is considered as `s
 * otherwise button_debouced output a number that is neither `0` or `1`, indicating that the button is still bouncing.
 
 The output of `button_debouced()` has four possibilities:
+
 1. `0`
 
 2. `1`
