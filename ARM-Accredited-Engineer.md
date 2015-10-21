@@ -360,3 +360,54 @@ handling.
 You can download the latest version of the CMSIS source package from [arm.com](http://www.arm.com/cmsis).
 
 # Chapter 3: Techinical Overview
+
+## General information
+ARM Cortex-M are 32-bit **RISC** processors
+* 32-bit registers
+* 32-bit internal data path
+* 32-bit bus interface
+
+three-stage pipeline design
+* instruction fetch
+* decode
+* execution
+
+Harvard bus architecture
+* allows simultaneous instruction fetches and data accesses.
+
+The memory map is *unified*, which
+means that although there can be multiple bus interfaces, there is only one 4GB
+memory space. The memory space is used by the program code, data, peripherals,
+and some of the debug support components inside the processors.
+
+*Load-Store* architecture: This means data needs to be loaded from the memory, processed,
+and then written back to memory using a number of separate instructions.
+
+The details of the registers inside the
+processors are commonly known as a programmer’s model.
+
+### Instruction set
+**Thumb-2** Technology: allows mixture of 16-bit and 32-bit instructions for high code density and high efficiency.
+
+### Block diagram
+![m3m4-block](https://cloud.githubusercontent.com/assets/14265605/10642653/5a16510a-77e4-11e5-875b-fd18b391e369.png)
+
+Bus Interfaces on the Cortex-M3 and Cortex-M4 Processors:
+* **I-CODE**: Primarily for program memory: Instruction fetch and vector fetch for
+address 0x0 to 0x1FFFFFFF. Based on AMBA 3.0 AHB Lite bus
+protocol.
+* **D-CODE**: Primarily for program memory: Data and debugger accesses for
+address 0x0 to 0x1FFFFFFF. Based on AMBA 3.0 AHB Lite bus
+protocol.
+* **System**: Primarily for RAM and peripherals: Any accesses from address
+0x20000000 to 0xFFFFFFFF (apart from PPB regions). Based on
+AMBA 3.0 AHB Lite bus protocol.
+* **PPB**: External Private Peripheral Bus (PPB): For private debug components
+on system level from address 0xE0040000 to 0xE00FFFFF. Based on
+AMBA 3.0 APB protocol.
+* **DAP**: Debug Access Port (DAP) interface: For debugger accesses generated
+from the debug interface module to any memory locations including
+system memory and debug components. Based on the ARM
+CoreSight debug architecture.
+
+
