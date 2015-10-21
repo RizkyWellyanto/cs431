@@ -192,7 +192,7 @@ But this coding style is not scalable for larger projects:
 * multiple instantiations of the same peripheral: definition are repeated => increases code size
 * the reset function is not generalized enough
 
-Solution: [Common practice for delcaring peripheral registers]()
+Solution: [define the peripheral registers as data structures](https://github.com/bo-rc/cs431/blob/master/ARM-Accredited-Engineer.md#common-practice-for-delcaring-peripheral-registers)
 
 Typically, a peripheral requires an initialization process before it can be used. This might include some of the following steps (*All these initialization steps are carried out by programming peripheral registers in various peripheral blocks.*):
 * Programming the clock control circuitry to enable the clock signal connection to
@@ -209,7 +209,55 @@ characteristics such as output type (voltage, pull up/down, open drain, etc.).
 ## Common practice for delcaring peripheral registers
 *used by almost all Cortex-M microcontroller device-driver packages*
 
+```c
+typedef struct
+{
+  __IO uint32_t CRL; // The “__IO” is defined in a standardized header file in CMSIS. It implies a volatile data item that can be read or written to by software.
+  __IO uint32_t CRH;
+  __IO uint32_t IDR;
+  __IO uint32_t ODR;
+  __IO uint32_t BSRR;
+  __IO uint32_t BRR;
+  __IO uint32_t LCKR;
+} GPIO_TypeDef;
+```
+Then each peripheral base address (GPIO A to GPIO G) is defined as pointers to the data structure:
+```c
+#define PERIPH_BASE ((uint32_t)0x40000000)
+/*!< Peripheral base address in the bit-band region */
+#define APB2PERIPH_BASE (PERIPH_BASE + 0x10000)
+#define GPIOA_BASE (APB2PERIPH_BASE + 0x0800)
+#define GPIOB_BASE (APB2PERIPH_BASE + 0x0C00)
+#define GPIOC_BASE (APB2PERIPH_BASE + 0x1000)
+#define GPIOD_BASE (APB2PERIPH_BASE + 0x1400)
+#define GPIOE_BASE (APB2PERIPH_BASE + 0x1800)
+...
+#define GPIOA ((GPIO_TypeDef *) GPIOA_BASE)
+#define GPIOB ((GPIO_TypeDef *) GPIOB_BASE)
+#define GPIOC ((GPIO_TypeDef *) GPIOC_BASE)
+#define GPIOD ((GPIO_TypeDef *) GPIOD_BASE)
+#define GPIOE ((GPIO_TypeDef *) GPIOE_BASE)
+...
+```
+When peripherals are declared using such a method, we can create functions that
+can be used for each instance of the peripheral easily. For example, the code to reset
+the GPIO port can be written as:
+```c
+void GPIO_reset(GPIO_TypeDef* GPIOx)
+{
+  // Set all pins as analog input mode
+  GPIOx->CRL = 0; // Bit 0 to 7, all set as analog input
+  GPIOx->CRH = 0; // Bit 8 to 15, all set as analog input
+  GPIOx->ODR = 0; // Default output value is 0
+  return;
+}
+```
+To use this function, we just need to pass the peripheral base pointer to the function:
+```c
+GPIO_reset(GPIOA); /* Reset GPIO A */
+GPIO_reset(GPIOB); /* Reset GPIO B */
+```
 
-
+## Microcontoller interfaces
 
 
