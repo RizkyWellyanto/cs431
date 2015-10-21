@@ -308,10 +308,52 @@ From a software development point of view, the CMSIS-Core standardizes provides:
  * system exception handlers
  * system initialization
 * Standardized software variables for clock speed information
+
 In addition:
 * A common platform for device-driver libraries
  * Each device-driver library has the same look and feel
 
+### Organization of **CMSIS-Core**
+The **CMSIS** files are integrated into device-driver library packages from microcontroller
+vendors. Some of the files in the device-driver library are prepared by ARM
+and are common to various microcontroller vendors. Other files are vendor/device
+specific. 
 
- 
+In a general sense, we can define the **CMSIS** into multiple layers:
+* Core Peripheral Access Layer: Name definitions, address definitions, and
+helper functions to access core registers and core peripherals. 
+ * This is processor specific and is provided by ARM.
+* Device Peripheral Access Layer: Name definitions, address definitions of
+peripheral registers, as well as system implementations including interrupt
+assignments, exception vector definitions, etc. 
+ * This is device specific (note: multiple devices from the same vendor might use the same file set).
+* Access Functions for Peripherals: The driver code for peripheral accesses. 
+ * This is vendor specific and is optional. You can choose to develop your application
+using the peripheral driver code provided by the microcontroller vendor, or you
+can program the peripherals directly if you prefer.
+
+There is also a *proposed* additional layer for peripheral accesses:
+* Middleware Access Layer: The idea is to develop a set of APIs for interfacing common peripherals
+such as UART, SPI, and Ethernet. 
+ * not existing yet. If this layer exists, developers of middleware
+can develop their applications based on this layer to allow software to be ported
+between devices easily.
+
+The aim of **CMSIS** is to provide a common starting point, and the microcontroller vendors
+can add additional functions if they prefer. 
+* But software using these functions will need porting.
+
+![cmsis-core](https://cloud.githubusercontent.com/assets/14265605/10638120/d5377a14-77ce-11e5-9ca1-d8075852e508.png)
+
+### Use **CMSIS-Core**
+![use-cmsis](https://cloud.githubusercontent.com/assets/14265605/10638228/77698bb0-77cf-11e5-8193-cf8bc8b99871.png)
+
+* startup code in the form of assembly or C
+ * Startup code is required for the starting sequence of the processor, and
+it also includes the exception vector table definition that is required for interrupt
+handling.
+* `system_<device>.c`: device initialization code
+ * `system_<device>.h`: its header
+* `core_cm3.c` `core_cm4.c`: for **CMSIS**2.0 or older, processor-specific code
+* `core_cm3.h` `core_cm4.h`: processor-specific headers
  
