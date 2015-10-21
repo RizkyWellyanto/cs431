@@ -156,9 +156,49 @@ Conventions in ARM programming:
 |Word|32-bit|
 |Double word|64-bit|
 
+## Inputs, outputs, and peripherals accesses
+On most microcontrollers, the peripherals are memory-mapped. 
 
+E.g. *General Purpose Input Output (**GPIO**)* register set as a number of pointers as:
+```c
+/* STM32F 100RBT6B e GPIO A Port Configuration Register Low */
+#define GPIOA_CRL (*((volatile unsigned long *) (0x40010800)))
+/* STM32F 100RBT6B e GPIO A Port Configuration Register High */
+#define GPIOA_CRH (*((volatile unsigned long *) (0x40010804)))
+/* STM32F 100RBT6B e GPIO A Port Input Data Register */
+#define GPIOA_IDR (*((volatile unsigned long *) (0x40010808)))
+/* STM32F 100RBT6B e GPIO A Port Output Data Register */
+#define GPIOA_ODR (*((volatile unsigned long *) (0x4001080C)))
+/* STM32F 100RBT6B e GPIO A Port Bit Set/Reset Register */
+#define GPIOA_BSRR(*((volatile unsigned long *) (0x40010810)))
+/* STM32F 100RBT6B e GPIO A Port Bit Reset Register */
+#define GPIOA_BRR (*((volatile unsigned long *) (0x40010814)))
+/* STM32F 100RBT6B e GPIO A Port Configuration Lock Register */
+#define GPIOA_LCKR (*((volatile unsigned long *) (0x40010818)))
+```
+Then we can use the definitions directly:
+```c
+void GPIOA_reset(void) /* Reset GPIO A */
+{
+  // Set all pins as analog input mode
+  GPIOA_CRL = 0; // Bit 0 to 7, all set as analog input
+  GPIOA_CRH = 0; // Bit 8 to 15, all set as analog input
+  GPIOA_ODR = 0; // Default output value is 0
+  return;
+}
+```
 
-
+Typically, a peripheral requires an initialization process before it can be used. This might include some of the following steps (*All these initialization steps are carried out by programming peripheral registers in various peripheral blocks.*):
+* Programming the clock control circuitry to enable the clock signal connection to
+the peripheral, and clock signal connection to corresponding I/O pins if needed.
+* Configure the operation mode of the I/Opins.
+ * Most microcontrollers have multiplexed I/O pins that can be used for multiple purposes.
+* you might also
+need to program additional configuration registers to define the expected electrical
+characteristics such as output type (voltage, pull up/down, open drain, etc.).
+* Peripheral configuration.
+ * use driver functions provided by the vendor to reduce the programming work.
+* Interrupt configuration.
 
 
 
