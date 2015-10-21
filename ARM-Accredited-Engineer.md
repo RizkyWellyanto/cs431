@@ -357,3 +357,6 @@ handling.
 * `core_cm3.c` `core_cm4.c`: for **CMSIS**2.0 or older, processor-specific code
 * `core_cm3.h` `core_cm4.h`: processor-specific headers
  
+You can download the latest version of the CMSIS source package from [arm.com](http://www.arm.com/cmsis).
+
+# Chapter 3: Techinical Overview
