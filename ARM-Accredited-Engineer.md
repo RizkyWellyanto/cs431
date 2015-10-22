@@ -449,3 +449,30 @@ of the memory space (address 0x0), but the vector table offset can be changed at
 runtime if needed.
 
 # Chapter 4: Architecture
+Both ARMv7-M (Cortex-M3) and ARMv7E-M (Cortex-M4) features are documented in the same architecture specification document:
+*the ARMv7-M Architecture Reference Manual*
+
+No need to read the 1k-page manual, all you need are:
+* a basic understanding of the programmer’s model
+* how exceptions (such as interrupts) are handled
+* the memory map
+* how to use the peripherals
+* how to use the software driver library files from the microcontroller vendors
+
+## Programmer's model
+
+### Operation modes and states
+
+
+
+
+
+
+
+
+
+
+
+
+
+
