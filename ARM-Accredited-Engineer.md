@@ -595,6 +595,178 @@ The IPSR is read only and can be read from combined PSR (xPSR).
 
 ![psr-bit-fields](https://cloud.githubusercontent.com/assets/14265605/10657200/582bfd68-784d-11e5-9d67-7f784b0eb8a5.png)
 
+#### PRIMASK, FAULTMASK, and BASEPRI registers
+These special registers are used to mask exceptions based on priority levels.
+* *smaller* number is a *higher* priority
+* can only be accessed in the privileged access level
+ * in unprivileged state writes to these registers are ignored and reads return zero
+* By default, they are all zero, which means the masking (disabling of exception/interrupt) is not active.
+
+![mask](https://cloud.githubusercontent.com/assets/14265605/10670281/6f5e802a-78aa-11e5-89a9-fd1c3416b0d0.png)
+
+The PRIMASK register is a 1-bit wide interrupt mask register. When set, it blocks all exceptions (including interrupts)
+* Effectively it raises the current exception priority level to 0
+* Non-Maskable Interrupt (NMI) and the HardFault exception can still get run
+
+The most common usage for PRIMASK is to disable all interrupts for a time critical
+process. After the time critical process is completed, the PRIMASKneeds to be cleared
+to re-enable interrupts.
+
+The FAULTMASK register is very similar to PRIMASK, but it also blocks
+the HardFault exception, which effectively raises the current exception priority
+level to [minus]1.
+* can be used during fault handling.
+* FAULTMASK is cleared automatically at exception return.
+
+BASEPRI masks exceptions or interrupts based on priority
+level. The width of the BASEPRI register depends on how many priority levels are
+implemented in the design.
+* Most Cortex-M3 or Cortex-M4 have eight programmable exception priority levels (3-bit width) or 16 levels (4-bit width)
+* When BASEPRI is set to 0, it is disabled.
+ * When it is set to a non-zero value, it blocks exceptions (including interrupts) that have the same or lower priority level.
+
+**CMSIS-Core**:
+```c
+x = __get_BASEPRI(); // Read BASEPRI register
+x = __get_PRIMARK(); // Read PRIMASK register
+x = __get_FAULTMASK(); // Read FAULTMASK register
+__set_BASEPRI(x); // Set new value for BASEPRI
+__set_PRIMASK(x); // Set new value for PRIMASK
+__set_FAULTMASK(x); // Set new value for FAULTMASK
+__disable_irq(); // Set PRIMASK, disable IRQ (Interrupt requrest)
+__enable_irq(); // Clear PRIMASK, enable IRQ
+```
+* can only be accessed in the privileged access level.
+
+Assembly code:
+```
+MRS r0, BASEPRI ; Read BASEPRI register into R0
+MRS r0, PRIMASK ; Read PRIMASK register into R0
+MRS r0, FAULTMASK ; Read FAULTMASK register into R0
+MSR BASEPRI, r0 ; Write R0 into BASEPRI register
+MSR PRIMASK, r0 ; Write R0 into PRIMASK register
+MSR FAULTMASK, r0 ; Write R0 into FAULTMASK register
+```
+
+the Change Processor State (CPS) instructions allow the value of the
+PRIMASK and FAULTMASK to be set or cleared with a simple instruction:
+```
+CPSIE i ; Enable interrupt (clear PRIMASK)
+CPSID i ; Disable interrupt (set PRIMASK)
+CPSIE f ; Enable interrupt (clear FAULTMASK)
+CPSID f ; Disable interrupt (set FAULTMASK)
+```
+
+#### CONTROL register
+Defines:
+* The selection of stack pointer (Main Stack Point/Process Stack Pointer)
+* Access level in Thread mode (Privileged/Unprivileged)
+
+In addition, for Cortex-M4 with FPU: one bit indicates if the current context (currently executed code) uses
+the floating point unit or not.
+
+![control-register](https://cloud.githubusercontent.com/assets/14265605/10670730/840cb24c-78ac-11e5-9b56-dabd60e3fa08.png)
+
+![bit-fields-in-controlregister](https://cloud.githubusercontent.com/assets/14265605/10670796/eb83726c-78ac-11e5-809d-8e28c54e82e2.png)
+A program in unprivileged access level cannot switch itself back to privileged
+access level. If it is necessary to switch the processor back to using privileged access level in
+Thread mode, then the exception mechanism is needed:
+* During exception handling,
+the exception handler can clear the nPRIV bit. When returning to
+Thread mode, the processor will be in privileged access level.
+
+In most simple applications without an embedded OS, there is no need to change
+the value of the CONTROL register. The whole application can run in privileged access
+level and use only the MSP.
+
+The settings of nPRIV and SPSEL are orthogonal:
+![comb-of-npriv-and-spesel](https://cloud.githubusercontent.com/assets/14265605/10670967/b9399ec0-78ad-11e5-8e4c-25d60097e6f3.png)
+
+**CMSIS**-compliant device-driver libraries:
+```c
+x = __get_CONTROL(); // Read the current value of CONTROL
+__set_CONTROL(x); // Set the CONTROL value to x
+```
+
+To access the Control register in assembly:
+```
+MRS r0, CONTROL ; Read CONTROL register into R0
+MSR CONTROL, r0 ; Write R0 into CONTROL register
+```
+
+e.g. detect if privileged:
+```c
+int in_privileged(void)
+{
+  if (__get_IPSR() != 0) 
+    return 1; // True
+  else if ((__get_CONTROL() & 0x1)==0) 
+    return 1; // True
+  else 
+    return 0; // False
+}
+```
+
+After modifying the CONTROL register, architecturally an Instruction Synchronization
+Barrier (ISB) instruction (or __ISB() function in CMSIS compliant
+driver) should be used to ensure the effect of the change applies to subsequent
+code. Due to the simple nature of the Cortex-M3, Cortex-M4, Cortex-M0þ,
+Cortex-M0, and Cortex-M1 pipeline, omission of the ISB instruction does not
+cause any problem.
+
+For the Cortex-M4 processor with floating point unit (FPU), or any variant of
+ARMv7-M processors with (FPU), the FPCA bit can be set automatically due to
+the presence of floating point instructions.
+* If the program contains floating point
+operations and the FPCA bit is cleared accidentally, and subsequently an interrupt
+occurs, the data in registers in the floating point unit will not be saved by the
+exception entry sequence and could be overwritten by the interrupt handler. In
+this case, the program will not be able to continue correct processing when
+resuming the interrupted task.
+
+### Floating point regesters
+![fpu-registers](https://cloud.githubusercontent.com/assets/14265605/10671179/d82329d6-78ae-11e5-814a-4dbee58f23bf.png)
+
+Each of the 32-bit registers S0 to S31 (“S” for single precision) can be accessed
+using floating point instructions, or accessed as a pair, in the symbol of D0 to
+D15 (“D” for double-word/double-precision).
+* Although the floating point unit in the Cortex-M4 does not support double precision floating
+point calculations, you can still use floating point instructions for transferring double
+precision data.
+
+#### Floating point status and control registers (FPSCR)
+![bit-field-fpscr](https://cloud.githubusercontent.com/assets/14265605/10671231/24caaa66-78af-11e5-8f42-5dd59140a435.png)
+
+![bit-field-fpscr-explain](https://cloud.githubusercontent.com/assets/14265605/10671339/b87c00d4-78af-11e5-89b7-fd5249116471.png)
+
+#### Memory-mapped floating point unit control registers
+In addition to the floating point register bank and FPSCR, the floating point unit also
+introduces several additional memory-mapped registers into the system. For
+example, the Coprocessor Access Control Register (CPACR) is used to enable or
+disable the floating point unit. By default the floating point unit is disabled to reduce
+power consumption. Before using any floating point instructions, the floating point
+unit must be enabled by programming the CPACR register:
+```c
+// CMSIS
+SCB->CPACR |= 0xF << 20; // Enable full access to the FPU
+```
+In assembly:
+```
+LDR R0,=0xE000ED88 ; R0 set to address of CPACR
+LDR R1,=0x00F00000 ; R1 = 0xF << 20
+LDR R2 [R0] ; Read current value of CPACR
+ORRS R2, R2, R1 ; Set bit
+STR R2,[R0] ; Write back modified value to CPACR
+```
+![cpacr-bif-field](https://cloud.githubusercontent.com/assets/14265605/10671475/623174ec-78b0-11e5-93ea-104ea0db7495.png)
+
+## Behavior of the application program status register (APSR)
+
+
+
+
+
+
 
 
 
