@@ -550,9 +550,23 @@ the compiler automatically.
 
 ![register-names](https://cloud.githubusercontent.com/assets/14265605/10656965/a10c529c-784a-11e5-9db3-594c832fd0d9.png)
 
-
-
 ### Special registers (Registers not in the register bank)
+![special-register](https://cloud.githubusercontent.com/assets/14265605/10657024/6e273fe4-784b-11e5-8775-69800fd7511d.png)
+
+These registers contain the processor status and define the operation
+states and interrupt/exception masking.
+* needed for development of and embedded OS, or when advanced interrupt masking features are needed.
+
+Special registers are not memory mapped, and can be accessed using special register
+access instructions such as `MSR` and `MRS`.
+```
+MRS <reg>, <special_reg>; Read special register into register
+MSR <special_reg>, <reg>; write to special register
+```
+* **CMSIS-Core** also provides a number of C functions that can be used to access
+special registers.
+
+
 
 
 
