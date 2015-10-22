@@ -462,6 +462,34 @@ No need to read the 1k-page manual, all you need are:
 ## Programmer's model
 
 ### Operation modes and states
+**Operation states**
+* **Debug state**: When the processor is halted (e.g., by the debugger, or after hitting a
+breakpoint), it enters debug state and stops executing instructions.
+* **Thumb state**: If the processor is running program code (Thumb instructions), it
+is in the Thumb state. Unlike classic ARM processors like ARM7TDMI, there
+is no ARM state because the Cortex-M processors do not support the ARM instruction
+set.
+
+**Operation modes**
+* **Handler mode**: When executing an exception handler such as an Interrupt Service
+Routine (**ISR**). When in handler mode, the processor always has privileged
+access level.
+* **Thread mode**: When executing normal application code, the processor can be
+either in privileged access level or unprivileged access level. This is controlled by
+a special register called “CONTROL.”
+![operation-states-and-mode](https://cloud.githubusercontent.com/assets/14265605/10656577/c8b1403c-7845-11e5-94ff-6b15cf8f2ca1.png)
+* Software can switch the processor in privileged Thread mode to unprivileged Thread mode. However, it cannot switch itself back.
+ * the processor has to use the exception mechanismto handle the switch-back.
+* By default, the Cortex-M processors start in privileged Thread mode and in Thumb state
+
+Besides the differences in memory access permission and access to several
+special instructions, the programmer’s model of the privileged access level and
+unprivileged access level are almost the same. Note that almost all of the **NVIC** registers
+are privileged access only.
+
+Thread mode has a separate shadowed stack pointer. Unprivileged Thread mode can be unused in simple applications.
+
+### Registers
 
 
 
