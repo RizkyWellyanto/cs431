@@ -436,7 +436,16 @@ The address location of the **NVIC** is memory-mapped and is fixed.
 
 ## Features of Cotrex-M3/4
 
+The majority of the Cortex-M microcontroller products use little endian.
 
+If an **MPU**(Memory protection unit) is included,
+applications can divide the memory space into a number of regions and define the
+access permissions for each of them. When an access rule is violated, a fault exception
+is generated and the fault exception handler will be able to analyze the problem
+and, if possible, correct it.
 
+By default the vector table is located at the beginning
+of the memory space (address 0x0), but the vector table offset can be changed at
+runtime if needed.
 
-
+# Chapter 4: Architecture
