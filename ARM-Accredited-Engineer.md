@@ -566,6 +566,23 @@ MSR <special_reg>, <reg>; write to special register
 * **CMSIS-Core** also provides a number of C functions that can be used to access
 special registers.
 
+#### Program Status Registers
+**PSR** is composed of:
+* Application PSR (APSR)
+* Execution PSR (EPSR)
+* Interrupt PSR (IPSR)
+
+These three registers can be accessed as one combined register,
+referred to as xPSR in some documentation. In ARM assembler, when accessing
+xPSR, the symbol PSR is used. For example:
+```
+MRS r0, PSR ; Read the combined program status word
+MSR PSR, r0 ; Write combined program state word
+```
+
+![psr](https://cloud.githubusercontent.com/assets/14265605/10657152/b539e494-784c-11e5-864e-7fe89c7386de.png)
+
+
 
 
 
