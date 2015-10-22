@@ -580,7 +580,20 @@ MRS r0, PSR ; Read the combined program status word
 MSR PSR, r0 ; Write combined program state word
 ```
 
+You can also access an individual PSR. For example:
+```
+MRS r0, APSR ; Read Flag state into R0
+MRS r0, IPSR ; Read Exception/Interrupt state
+MSR APSR, r0 ; Write Flag state
+```
+
+The EPSR cannot be accessed by software code directly using MRS (read as zero) or MSR
+
+The IPSR is read only and can be read from combined PSR (xPSR).
+
 ![psr](https://cloud.githubusercontent.com/assets/14265605/10657152/b539e494-784c-11e5-864e-7fe89c7386de.png)
+
+![psr-bit-fields](https://cloud.githubusercontent.com/assets/14265605/10657200/582bfd68-784d-11e5-9d67-7f784b0eb8a5.png)
 
 
 
