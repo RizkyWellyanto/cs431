@@ -489,7 +489,70 @@ are privileged access only.
 
 Thread mode has a separate shadowed stack pointer. Unprivileged Thread mode can be unused in simple applications.
 
-### Registers
+### Registers (Registers in the register bank)
+ARM uses ***Load-Store Architecture***: if data in
+memory is to be processed, it has to be loaded from the memory to registers in
+the **register bank**, processed inside the processor, and then written back to the memory,
+if needed.
+
+
+![register-bank](https://cloud.githubusercontent.com/assets/14265605/10656743/b5853a8e-7847-11e5-94a1-c6da3af6e438.png)
+
+**R0** - **R12**: 
+Due to the limited available space in the instruction set, many
+16-bit instructions can only access the low registers. The high registers (R8 e R12)
+can be used with 32-bit instructions, and a few with 16-bit instructions, like MOV
+(move). The initial values of R0 to R12 are undefined.
+
+**R13**, **Stack Pointer(SP)**:
+R13 is the Stack Pointer. It is used for accessing the stack memory via PUSH and POP
+operations. Physically there are two different Stack Pointers: the Main Stack Pointer
+(MSP, or SP_main in some ARM documentation) is the default Stack Pointer. It
+is selected after reset, or when the processor is in Handler Mode. The other Stack
+Pointer is called the Process Stack Pointer (PSP, or SP_process in some ARM documentation). The PSP can only be used in Thread Mode. The selection of Stack
+Pointer is determined by a special register called CONTROL, which will be explained
+in section 4.2.3. In normal programs, only one of these Stack Pointers will be visible.
+
+Both MSP and PSP are 32-bit, but the lowest two bits of the Stack Pointers (either
+MSP or PSP) are always zero, and writes to these two bits are ignored. In ARM
+Cortex-M processors, PUSH and POP are always 32-bit, and the addresses of the
+transfers in stack operations must be aligned to 32-bit word boundaries.
+
+For most cases, it is not necessary to use the PSP if the application doesn’t
+require an embedded OS. Many simple applications can rely on the MSP completely.
+The PSP is normally used when an embedded OS is involved, where the stack for the
+OS kernel and application tasks are separated. The initial value of PSP is undefined,
+and the initial value of MSP is taken from the first word of the memory during the
+reset sequence.
+
+**R14**, **Link register (LR)**:
+This is used for holding the return address when calling a function or subroutine.
+* If a function needs to call another function or subroutine, it needs to save the value of LR in the stack first.
+
+Although the return address values in the Cortex-M processors are always even
+(bit 0 is zero because the instructions must be aligned to half-word addresses), bit
+0 of LR is readable and writeable. Some of the branch/call operations require that
+bit zero of LR (or any register being used) be set to 1 to indicate Thumb state.
+
+**R15**, **Program Counter (PC)**:
+It is readable and writeable: a read returns the
+current instruction address plus 4. Writing to PC
+(e.g., using data transfer/processing instructions) causes a branch operation.
+
+The instructions must be aligned to half-word or word addresses, the Least Significant Bit (LSB) of the PC is zero.
+
+When using some of the branch/
+memory read instructions to update the PC, you need to set the LSB of the new PC
+value to 1 to indicate the Thumb state.
+* In high-level programming
+languages (including C, C++), the setting of LSB in branch targets is handled by
+the compiler automatically.
+
+![register-names](https://cloud.githubusercontent.com/assets/14265605/10656965/a10c529c-784a-11e5-9db3-594c832fd0d9.png)
+
+
+
+### Special registers (Registers not in the register bank)
 
 
 
