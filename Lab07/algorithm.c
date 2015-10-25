@@ -63,25 +63,25 @@ uint16_t nth_element(uint16_t *arr, uint16_t len, uint16_t n)
     memcpy(arr_copy, arr, sizeof(arr_copy));
     uint16_t len_copy = len;
     uint16_t new_pivot = 0;
-    uint16_t offside = 0;
+    uint16_t offset = 0;
 
     while(1)
     {
         uint16_t pivot = rand()%len_copy;
 
-        new_pivot = partition(&arr_copy[offside], len_copy, pivot);
+        new_pivot = partition(&arr_copy[offset], len_copy, pivot);
 
         if(n == new_pivot)
-            return arr_copy[offside + new_pivot];
+            return arr_copy[offset + new_pivot];
         else if(n < new_pivot)
         { // the element is in the lower half
             len_copy = new_pivot; // just chop off the array and use the lower half
-                                  // offside, relative index (n) won't change
+                                  // offset, relative index (n) won't change
         }
         else
         { // the element is in the higher half
             n -= new_pivot + 1; // relative index (n) decreases by this number
-            offside += new_pivot + 1; // offside increases by this number
+            offset += new_pivot + 1; // offset increases by this number
             len_copy -= new_pivot + 1; // lenth decreases by this number
         }
     }
