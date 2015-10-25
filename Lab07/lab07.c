@@ -7,7 +7,15 @@
 #include <time.h>
 #include "lcd.h"
 #include "flextouch.h"
+#include "flexmotor.h"
 #include "algorithm.h"
+#include "pid_controller.h"
+
+#define NUM_SAMPLES (5)
+#define KP (0.1)
+#define KI (0.005)
+#define KD (0.02)
+#define Set_x (1750)
 
 /* Initial configuration by EE */
 // Primary (XT, HS, EC) Oscillator with PLL
@@ -22,6 +30,58 @@ _FWDT(FWDTEN_OFF);
 // Disable Code Protection
 _FGS(GCP_OFF);
 
+void init_timer3()
+{
+   CLEARBIT(T3CONbits.TON);   // Disable Timer
+   CLEARBIT(T3CONbits.TCS);   //Select internal instruction cycle clock (12.8 MHz)
+   CLEARBIT(T3CONbits.TGATE); //Disable Gated Timer mode
+   TMR3 = 0x00;               //Clear Timer Register
+   T3CONbits.TCKPS = 0b10;    //Set Prescaler (1:64)
+   PR3 = 10000;                //Set Period
+   IPC2bits.T3IP = 0x01;      //Set IPL
+   CLEARBIT(IFS0bits.T3IF);   //Clear IF
+   SETBIT(IEC0bits.T3IE);     //Enable INT
+   SETBIT(T3CONbits.TON);     //Enable Timer
+}
+
+uint16_t samples[NUM_SAMPLES];
+uint16_t i = 0;
+uint16_t x_current = Set_x;
+uint16_t duty;
+
+pid_controller_t controller;
+
+void
+__attribute__ (( __interrupt__ )) _T3Interrupt(void)
+{
+    for (i = 0; i < NUM_SAMPLES; ++i) {
+        Delay_ms(1);
+        samples[i] = touch_adc();
+    }
+
+    x_current = find_median(samples, NUM_SAMPLES);
+    duty = feed_back(&controller, x_current);
+
+    motor_set_duty(CHANNEL_X, duty);
+
+    lcd_locate(0, 1);
+    lcd_printf("kp:%.3f, ki:%.3f, kd:%.3%", KP, KI, KD);
+    lcd_locate(0,2);
+    lcd_printf("Set_x:%u", Set_x);
+    lcd_locate(0,3);
+    lcd_printf("x_current:%u", x_current);
+    lcd_locate(0,4);
+    lcd_printf("P_x: %.0f ", controller->error);       
+    lcd_locate(0,5);
+    lcd_printf("I_x: %.0f ", controller->integral);
+    lcd_locate(0,6);
+    lcd_printf("D_x: %.0f ", controller->derivative);
+    lcd_locate(0,7);
+    lcd_printf("F_x: %.0f ", duty);       
+        
+    CLEARBIT(IFS0bits.T3IF);
+}
+
 int main(){
 	//Init LCD
 	__C30_UART=1;
@@ -29,40 +89,24 @@ int main(){
 	lcd_clear();
 	lcd_locate(0,0);
 
-	lcd_printf("Lab06");
+	lcd_printf("Lab07");
 
-    const uint16_t NUM_SAMPLES = 5;
-    uint16_t samples[NUM_SAMPLES];
-    uint16_t i = 0;
+    init_timer3(); // for timer interrupt
+    
+    pid_controller_init(&controller, 1750, 0.05, KP, KI, KD);
+    
+    init_adc1(); // for flextouch
 
-    init_adc1();
     touch_init();
+    
+    motor_init(CHANNEL_Y);
+    motor_set_duty(CHANNEL_Y, LOW); // set Y to a fixed position
+    
+    motor_init(CHANNEL_X);
+    
+    touch_select_dim(DIM_X);
 
-    while(1){
-
-        // sample X
-        touch_select_dim(DIM_X);
-
-        for (i = 0; i < NUM_SAMPLES; ++i) {
-            Delay_ms(2);
-            samples[i] = touch_adc();
-        }
-
-        
-        lcd_locate(0, 1);
-        lcd_printf("X = %u        ", find_median(samples, NUM_SAMPLES));
-        
-        // sample Y
-        touch_select_dim(DIM_Y);
-
-        for (i = 0; i < NUM_SAMPLES; ++i) {
-            Delay_ms(2);
-            samples[i] = touch_adc();
-        }
-
-        lcd_locate(0, 2);
-        lcd_printf("Y = %u        ", find_median(samples, NUM_SAMPLES));
-    }
+    while(1);
 
     return 0;
 }
