@@ -12,9 +12,9 @@
 #include "pid_controller.h"
 
 #define NUM_SAMPLES (5)
-#define KP (0.02)
-#define KI (0.001)
-#define KD (0.00001)
+#define KP (0.05)
+#define KI (0.03)
+#define KD (0.01)
 #define Set_x (1750)
 
 /* Initial configuration by EE */
@@ -62,6 +62,9 @@ __attribute__ (( __interrupt__, no_auto_psv )) _T3Interrupt(void)
     x_current = find_median(samples, NUM_SAMPLES);
     duty = feed_back(&controller, x_current);
 
+    lcd_locate(10,7);
+    lcd_printf("duty: %u          ", (uint16_t)duty);
+
     motor_set_duty(CHANNEL_X, duty);
 
     lcd_locate(10, 0);
@@ -73,14 +76,14 @@ __attribute__ (( __interrupt__, no_auto_psv )) _T3Interrupt(void)
     lcd_locate(0,3);
     lcd_printf("x_current:%u     ", x_current);
     lcd_locate(0,4);
-    lcd_printf("P_x: %.2f        ", controller.current_delta);
+    lcd_printf("P_x: %.2f        ", (double)controller.current_delta*controller.kp);
     lcd_locate(0,5);
-    lcd_printf("I_x: %.2f        ", controller.integral);
+    lcd_printf("I_x: %.2f        ", (double)controller.integral*controller.ki);
     lcd_locate(0,6);
-    lcd_printf("D_x: %.2f        ", controller.derivative);
+    lcd_printf("D_x: %.2f        ", (double)controller.derivative*controller.kd);
     lcd_locate(0,7);
     lcd_printf("F_x: %u          ", duty);
-        
+
     CLEARBIT(IFS0bits.T3IF);
 }
 
@@ -94,18 +97,18 @@ int main(){
 	lcd_printf("Lab07");
 
     init_timer3(); // for timer interrupt
-    
-    pid_controller_init(&controller, 1750, 0.05, KP, KI, KD);
-    
+
+    pid_controller_init(&controller, Set_x, 0.05, KP, KI, KD);
+
     init_adc1(); // for flextouch
 
     touch_init();
-    
+
     motor_init(CHANNEL_Y);
     motor_set_duty(CHANNEL_Y, HIGH); // set Y to a fixed position
-    
+
     motor_init(CHANNEL_X);
-    
+
     touch_select_dim(DIM_X);
 
     while(1);
