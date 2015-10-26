@@ -39,29 +39,26 @@ uint16_t feed_back(pid_controller_t * controller, uint16_t pos) {
     ++controller->history_idx;
     if (controller->history_idx >= MEMORY)
         controller->history_idx = 0;
-    
+
     int i = 0;
-    for(; i < MEMORY; ++i) {
+    for(controller->integral = 0; i < MEMORY; ++i) {
         // Integral feedback
         controller->integral += controller->history[i];
     }
     
     // Derivative feedback
-    float previous = controller->error;
+    uint16_t previous = controller->error;
     if(controller->history_idx == 0)
         previous = controller->history[MEMORY];
     else
         previous = controller->history[controller->history_idx - 1];
     
-    float controller->derivative = (controller->error - controller->history[previous]) / controller->delta_time;
+    controller->derivative = (controller->error - controller->history[previous]) / controller->delta_time;
      
     float u = controller->kp*controller->error + controller->ki*controller->integral - controller->kd*controller->derivative;
     
-    // clamp u and convert to duty
-    if(u > 200)
-        u = 200;
-    else if(u < -400)
-        u = -400;
+
+    // need to clamp u??
     
-    return (((u+400)*160L)/ (600)) + 220; // magic numbers
+    return u + 290; // magic numbers
 }
