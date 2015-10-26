@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   algorithm.h
  * Author: boliu1
  * Comments: for CS431 dsPIC33f board PID controller
@@ -6,7 +6,7 @@
  */
 
 #ifndef ABS_ALGORITHM_H
-#def ABS_ALGORITHM_H
+#define ABS_ALGORITHM_H
 
 #ifdef	__cplusplus
 extern "C" {
