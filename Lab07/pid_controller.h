@@ -18,11 +18,11 @@
 #include "types.h"
 
 // This is a guard condition so that contents of this file are not included
-// more than once.  
+// more than once.
 
-#include <xc.h> // include processor files - each processor file is guarded.  
+#include <xc.h> // include processor files - each processor file is guarded.
 
-#define MEMORY (5)
+#define MEMORY (10)
 #ifdef	__cplusplus
 extern "C" {
 #endif
@@ -32,24 +32,24 @@ typedef struct {
     float previous_delta;
     float integral;
     float derivative;
-    
+
     float delta_time;
-   
+
     float target;
-    
+
     float kp;
     float ki;
     float kd;
-    
+
     float history[MEMORY];
     int16_t history_idx;
-    
-} pid_controller_t; 
+
+} pid_controller_t;
 
 void pid_controller_init(pid_controller_t * controller, float Target, float Delta_time, float Kp, float Ki, float Kd);
 
 uint16_t feed_back(pid_controller_t * controller, uint16_t pos);
-    
+
 #ifdef	__cplusplus
 }
 #endif
