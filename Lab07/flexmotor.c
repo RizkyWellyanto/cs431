@@ -41,7 +41,7 @@ void motor_init(uint8_t chan)
     CLEARBIT(IEC0bits.T2IE); // Disable Timer2 interrupt enable control bit
     PR2 = PERIOD; // Set timer period 20ms:
 
-   if(chan == CHANNEL_X )
+   if(chan == CHANNEL_Y )
    {
         CLEARBIT(TRISDbits.TRISD7); // Set OC7 as output
         OC7R = MID; // Set the initial to mid position
@@ -49,7 +49,7 @@ void motor_init(uint8_t chan)
         OC7CON = 0x0006; // Set OC7: PWM, no fault check, Timer2
         SETBIT(T2CONbits.TON); // Turn Timer 2 on
     }
-    else if (chan == CHANNEL_Y)
+    else if (chan == CHANNEL_X)
     {
         CLEARBIT(TRISDbits.TRISD8); // Set OC8 as output
         OC8R = MID; // Set the initial throw to mid position
@@ -62,11 +62,11 @@ void motor_init(uint8_t chan)
 void motor_set_duty(uint8_t chan, uint16_t duty)
 {
     
-    if (chan == CHANNEL_X)
+    if (chan == CHANNEL_Y)
     {
         OC7RS = PERIOD - duty; /* Load OCRS: next pwm duty cycle */
     }
-    else if (chan == CHANNEL_Y)
+    else if (chan == CHANNEL_X)
     {
         OC8RS = PERIOD - duty; /* Load OCRS: next pwm duty cycle */
     }
