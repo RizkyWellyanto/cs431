@@ -28,7 +28,8 @@ extern "C" {
 #endif
 
 typedef struct {
-    float error;
+    float current_delta;
+    float previous_delta;
     float integral;
     float derivative;
     
@@ -40,7 +41,7 @@ typedef struct {
     float ki;
     float kd;
     
-    int16_t history[MEMORY];
+    float history[MEMORY];
     int16_t history_idx;
     
 } pid_controller_t; 
