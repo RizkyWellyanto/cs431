@@ -73,7 +73,7 @@ __attribute__ (( __interrupt__, no_auto_psv )) _T3Interrupt(void)
     lcd_locate(0,3);
     lcd_printf("x_current:%u     ", x_current);
     lcd_locate(0,4);
-    lcd_printf("P_x: %.2f        ", controller.error);
+    lcd_printf("P_x: %.2f        ", controller.current_delta);
     lcd_locate(0,5);
     lcd_printf("I_x: %.2f        ", controller.integral);
     lcd_locate(0,6);
