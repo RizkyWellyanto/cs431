@@ -12,9 +12,9 @@
 #include "pid_controller.h"
 
 #define NUM_SAMPLES (5)
-#define KP (0.1)
-#define KI (0.005)
-#define KD (0.02)
+#define KP (0.02)
+#define KI (0.001)
+#define KD (0.00001)
 #define Set_x (1750)
 
 /* Initial configuration by EE */
@@ -52,7 +52,7 @@ uint16_t duty;
 pid_controller_t controller;
 
 void
-__attribute__ (( __interrupt__ )) _T3Interrupt(void)
+__attribute__ (( __interrupt__, no_auto_psv )) _T3Interrupt(void)
 {
     for (i = 0; i < NUM_SAMPLES; ++i) {
         Delay_ms(1);
@@ -64,20 +64,22 @@ __attribute__ (( __interrupt__ )) _T3Interrupt(void)
 
     motor_set_duty(CHANNEL_X, duty);
 
+    lcd_locate(10, 0);
+    lcd_printf("kp:%.3f", KP);
     lcd_locate(0, 1);
-    lcd_printf("kp:%.3f, ki:%.3f, kd:%.3%", KP, KI, KD);
+    lcd_printf("ki:%.3f, kd:%.3f", KI, KD);
     lcd_locate(0,2);
     lcd_printf("Set_x:%u", Set_x);
     lcd_locate(0,3);
-    lcd_printf("x_current:%u", x_current);
+    lcd_printf("x_current:%u     ", x_current);
     lcd_locate(0,4);
-    lcd_printf("P_x: %.0f ", controller->error);       
+    lcd_printf("P_x: %.2f        ", controller.error);
     lcd_locate(0,5);
-    lcd_printf("I_x: %.0f ", controller->integral);
+    lcd_printf("I_x: %.2f        ", controller.integral);
     lcd_locate(0,6);
-    lcd_printf("D_x: %.0f ", controller->derivative);
+    lcd_printf("D_x: %.2f        ", controller.derivative);
     lcd_locate(0,7);
-    lcd_printf("F_x: %.0f ", duty);       
+    lcd_printf("F_x: %u          ", duty);
         
     CLEARBIT(IFS0bits.T3IF);
 }
@@ -100,7 +102,7 @@ int main(){
     touch_init();
     
     motor_init(CHANNEL_Y);
-    motor_set_duty(CHANNEL_Y, LOW); // set Y to a fixed position
+    motor_set_duty(CHANNEL_Y, HIGH); // set Y to a fixed position
     
     motor_init(CHANNEL_X);
     
