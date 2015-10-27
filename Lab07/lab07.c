@@ -82,7 +82,7 @@ __attribute__ (( __interrupt__, no_auto_psv )) _T3Interrupt(void)
     lcd_locate(0,6);
     lcd_printf("D_x: %.2f        ", (double)controller.derivative*controller.kd);
     lcd_locate(0,7);
-    lcd_printf("F_x: %u          ", duty);
+    lcd_printf("F_x: %.2f        ", (couble)controller.feedback);
 
     CLEARBIT(IFS0bits.T3IF);
 }
