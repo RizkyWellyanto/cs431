@@ -7,7 +7,7 @@
 
 
 #include "pid_controller.h"
-#include "lcd.h"
+#include <stdlib.h>
 
 void pid_controller_init(pid_controller_t * controller, float Target, float Delta_time, float Kp, float Ki, float Kd) {
     controller->current_delta = 0.0f;
@@ -18,70 +18,30 @@ void pid_controller_init(pid_controller_t * controller, float Target, float Delt
     controller->delta_time = Delta_time;
 
     controller->target = Target;
+    
+    controller->feedback = 0.0f;
 
     controller->kp = Kp;
     controller->ki = Ki;
     controller->kd = Kd;
-
-    controller->history_idx = 0;
-
-    int i = 0;
-    for(; i < MEMORY; ++i) {
-        controller->history[i] = 0;
-    }
 }
 
 uint16_t feed_back(pid_controller_t * controller, uint16_t pos) {
     // Proportional feedback
     controller->current_delta = controller->target - pos;
+    
+    // this happens due to ball losing contact to flextouch temporarily
+    if( abs((controller->previous_delta - controller->current_delta)/controller->delta_time) > 10*controller->derivative )
+        controller->current_delta = controller->previous_delta;
 
     // Integration feedback
     controller->integral += controller->current_delta * controller->delta_time;
 
     // Derivative feedback
-    controller->derivative = (controller->current_delta - controller->previous_delta) / controller->delta_time;
+    controller->derivative = (controller->previous_delta - controller->current_delta) / controller->delta_time;
     controller->previous_delta = controller->current_delta;
 
-    float u = controller->kp * controller->current_delta + controller->ki * controller->integral + controller->kd * controller->derivative;
+    controller->feedback = controller->kp * controller->current_delta + controller->ki * controller->integral - controller->kd * controller->derivative;
 
-    // need to clamp u??
-//    if(u >= 300)
-//        u = 300;
-//    else if(u<= -200)
-//        u = -200;
-    return u + 290; // magic numbers
+    return controller->feedback + 290; // 290 is the magic number to trim-center the midpoint of flextouch
 }
-
-// uint16_t feed_back(pid_controller_t * controller, uint16_t pos) {
-//     // Proportional feedback
-//     controller->error = controller->target - pos;
-
-//     // update controller history
-//     controller->history[controller->history_idx] = controller->error;
-
-//     ++controller->history_idx;
-//     if (controller->history_idx >= MEMORY)
-//         controller->history_idx = 0;
-
-//     int i = 0;
-//     for(controller->integral = 0; i < MEMORY; ++i) {
-//         // Integral feedback
-//         controller->integral += controller->history[i];
-//     }
-
-//     // Derivative feedback
-//     uint16_t previous = controller->error;
-//     if(controller->history_idx == 0)
-//         previous = controller->history[MEMORY];
-//     else
-//         previous = controller->history[controller->history_idx - 1];
-
-//     controller->derivative = (controller->error - controller->history[previous]) / controller->delta_time;
-
-//     float u = controller->kp*controller->error + controller->ki*controller->integral - controller->kd*controller->derivative;
-
-
-//     // need to clamp u??
-
-//     return u + 290; // magic numbers
-// }
