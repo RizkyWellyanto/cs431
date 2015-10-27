@@ -36,14 +36,12 @@ typedef struct {
     float delta_time;
 
     float target;
+    
+    float feedback;
 
     float kp;
     float ki;
     float kd;
-
-    float history[MEMORY];
-    int16_t history_idx;
-
 } pid_controller_t;
 
 void pid_controller_init(pid_controller_t * controller, float Target, float Delta_time, float Kp, float Ki, float Kd);
