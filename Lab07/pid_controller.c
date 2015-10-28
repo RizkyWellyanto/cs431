@@ -28,7 +28,9 @@ uint16_t feed_back(pid_controller_t * controller, uint16_t pos) {
     // Proportional feedback
     controller->current_delta = controller->target - pos;
 
-    // TODO: handling losing contact
+    // TODO: handling losing contact: check the 2nd derivative
+    if (abs((controller->current_delta - controller->previous_delta)/controller->delta_time - controller->derivative) > THRESHOLD)
+        controller->curren_delta = controller->previous_delta;
 
     // Integration feedback
     controller->integral += controller->current_delta * controller->delta_time;
