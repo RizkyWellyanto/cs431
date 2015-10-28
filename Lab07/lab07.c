@@ -12,10 +12,10 @@
 #include "pid_controller.h"
 
 #define NUM_SAMPLES (5)
-#define KP (0.05)
-#define KI (0.03)
-#define KD (0.01)
-#define Set_x (1750)
+#define KP (0.1)
+#define KI (0.1)
+#define KD (0.02)
+#define Set_x (1500)
 
 /* Initial configuration by EE */
 // Primary (XT, HS, EC) Oscillator with PLL
@@ -62,8 +62,8 @@ __attribute__ (( __interrupt__, no_auto_psv )) _T3Interrupt(void)
     x_current = find_median(samples, NUM_SAMPLES);
     duty = feed_back(&controller, x_current);
 
-    lcd_locate(10,7);
-    lcd_printf("duty: %u          ", (uint16_t)duty);
+    lcd_locate(13,7);
+    lcd_printf("U: %u          ", (uint16_t)duty);
 
     motor_set_duty(CHANNEL_X, duty);
 
@@ -76,13 +76,13 @@ __attribute__ (( __interrupt__, no_auto_psv )) _T3Interrupt(void)
     lcd_locate(0,3);
     lcd_printf("x_current:%u     ", x_current);
     lcd_locate(0,4);
-    lcd_printf("P_x: %.2f        ", (double)controller.current_delta*controller.kp);
+    lcd_printf("P_x: %.2f        ", controller.current_delta*controller.kp);
     lcd_locate(0,5);
-    lcd_printf("I_x: %.2f        ", (double)controller.integral*controller.ki);
+    lcd_printf("I_x: %.2f        ", controller.integral*controller.ki);
     lcd_locate(0,6);
-    lcd_printf("D_x: %.2f        ", (double)controller.derivative*controller.kd);
+    lcd_printf("D_x: %.2f        ", controller.derivative*controller.kd);
     lcd_locate(0,7);
-    lcd_printf("F_x: %.2f        ", (couble)controller.feedback);
+    lcd_printf("F_x: %.2f        ", controller.feedback);
 
     CLEARBIT(IFS0bits.T3IF);
 }
