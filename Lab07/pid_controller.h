@@ -36,7 +36,7 @@ typedef struct {
     float delta_time;
 
     float target;
-    
+
     float feedback;
 
     float kp;
@@ -53,4 +53,3 @@ uint16_t feed_back(pid_controller_t * controller, uint16_t pos);
 #endif
 
 #endif	/* PID_CONTROLLER_H */
-
