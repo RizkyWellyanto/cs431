@@ -22,7 +22,7 @@
 
 #include <xc.h> // include processor files - each processor file is guarded.
 
-#define THRESHOLD (5000) // handling losing contact
+#define THRESHOLD (600) // handling losing contact
 #ifdef	__cplusplus
 extern "C" {
 #endif
