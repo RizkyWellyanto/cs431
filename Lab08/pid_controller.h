@@ -22,7 +22,6 @@
 
 #include <xc.h> // include processor files - each processor file is guarded.
 
-#define THRESHOLD (600) // handling losing contact
 #ifdef	__cplusplus
 extern "C" {
 #endif
@@ -32,6 +31,7 @@ typedef struct {
     float previous_delta;
     float integral;
     float derivative;
+    float delta_threshold;
     
     float trim;
 
@@ -44,7 +44,7 @@ typedef struct {
     float kd;
 } pid_controller_t;
 
-void pid_controller_init(pid_controller_t * controller, float trim, float Delta_time, float Kp, float Ki, float Kd);
+void pid_controller_init(pid_controller_t * controller, float trim, float delta_threshold, float Delta_time, float Kp, float Ki, float Kd);
 
 uint16_t feed_back(pid_controller_t * controller, float pos, float target);
 
