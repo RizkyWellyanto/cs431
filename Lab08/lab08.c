@@ -14,7 +14,7 @@
 
 #define ADC_SAMPLES (5)
 
-#define KP_X (0.06)
+#define KP_X (0.04)
 #define KI_X (0.02)
 #define KD_X (0.02)
 
@@ -25,15 +25,7 @@
 #define Set_x (1500)
 #define Set_y (1500)
 
-#define flextouch_XMIN (300.0)
-#define flextouch_XMAX (3100.0)
-#define flextouch_YMIN (470.0)
-#define flextouch_YMAX (2606.0)
-
-#define js_XMIN (252.0)
-#define js_XMAX (956.0)
-#define js_YMIN (213.0)
-#define js_YMAX (876.0)
+#define BOUNDARY_BUF (50)
 
 /* Initial configuration by EE */
 // Primary (XT, HS, EC) Oscillator with PLL
@@ -87,6 +79,7 @@ uint16_t js_y;
 
 pid_controller_t controller_x;
 pid_controller_t controller_y;
+uint16_t duty_x, duty_y;
 
 void
 __attribute__ (( __interrupt__, no_auto_psv )) _T3Interrupt(void)
@@ -99,7 +92,10 @@ __attribute__ (( __interrupt__, no_auto_psv )) _T3Interrupt(void)
 
     x_current = find_median(samples, ADC_SAMPLES);
 
-    motor_set_duty(CHANNEL_X, feed_back(&controller_x, x_current, x_set));
+    //motor_set_duty(CHANNEL_X, feed_back(&controller_x, x_current, x_set));
+
+    duty_x = feed_back(&controller_x, x_current, x_set);
+    motor_set_duty(CHANNEL_X, duty_x);
 
     CLEARBIT(IFS0bits.T3IF);
 }
@@ -115,7 +111,10 @@ __attribute__ (( __interrupt__, no_auto_psv )) _T1Interrupt(void)
 
     y_current = find_median(samples, ADC_SAMPLES);
 
-    motor_set_duty(CHANNEL_Y, feed_back(&controller_y, y_current, y_set));
+    // motor_set_duty(CHANNEL_Y, feed_back(&controller_y, y_current, y_set));
+
+    duty_y = feed_back(&controller_y, y_current, y_set);
+    motor_set_duty(CHANNEL_Y, duty_y);
 
     CLEARBIT(IFS0bits.T1IF);
 }
@@ -144,12 +143,6 @@ int main(){
 	lcd_locate(0,0);
 
 	lcd_printf("Lab08");
-
-    init_timer3(); // for timer interrupt
-    init_timer1();
-
-    pid_controller_init(&controller_x, 290, 0.05, KP_X, KI_X, KD_X);
-    pid_controller_init(&controller_y, 290, 0.05, KP_Y, KI_Y, KD_Y);
 
     init_adc1(); // for flextouch
     touch_init();
@@ -182,8 +175,9 @@ int main(){
     uint8_t calibrate_flag = 1;
 
     lcd_locate(0,2);
-
-    lcd_printf("Calibrate joystick now!");
+    lcd_printf("Calibrate joystick:");
+    lcd_locate(0,3);
+    lcd_printf("move from corner to corner");
 
     while(calibrate_flag) {
         // calibrate x
@@ -215,21 +209,32 @@ int main(){
     calibrate_flag = 1;
     thumbStatus = UNSTABLE;
 
-    lcd_locate(0,3);
-    lcd_printf("Calibrate touchscreen now!");
+    lcd_locate(0,5);
+    lcd_printf("Calibrate touchscreen:");
+    lcd_locate(0,6);
+    lcd_printf("move ball from corner to corner");
 
     while(calibrate_flag) {
         // calibrate x
         touch_select_dim(DIM_X);
 
-        TX = touch_adc();
+        for (i = 0; i < ADC_SAMPLES; ++i) {
+            Delay_ms(1);
+            samples[i] = touch_adc();
+        }
 
+        TX = find_median(samples, ADC_SAMPLES);
 
         TXmax = (TXmax > TX) ? TXmax : TX;
 
         touch_select_dim(DIM_Y);
 
-        TY = touch_adc();
+        for (i = 0; i < ADC_SAMPLES; ++i) {
+            Delay_ms(1);
+            samples[i] = touch_adc();
+        }
+
+        TY = find_median(samples, ADC_SAMPLES);
 
         TYmax = (TYmax > TY) ? TYmax : TY;
 
@@ -242,15 +247,24 @@ int main(){
 
     }
 
-    motor_init(CHANNEL_X);
-    motor_init(CHANNEL_Y);
-
-    uint16_t loopCounter = 0;
-    // display_arena();
-
+    // initialization the motor and timer interrupts for controls
     lcd_clear();
     lcd_locate(0,0);
     lcd_printf("Lab08");
+
+    motor_init(CHANNEL_X);
+    motor_set_duty(CHANNEL_X, MID);
+    motor_init(CHANNEL_Y);
+    motor_set_duty(CHANNEL_Y, MID);
+
+    init_timer3(); // for timer interrupt
+    init_timer1();
+
+    pid_controller_init(&controller_x, 290, 1000, 0.05, KP_X, KI_X, KD_X);
+    pid_controller_init(&controller_y, 290, 1500, 0.05, KP_Y, KI_Y, KD_Y);
+
+    uint16_t loopCounter = 0;
+    // display_arena();
 
     while(1) {      
 
@@ -263,14 +277,14 @@ int main(){
             while(!AD2CON1bits.DONE); // wait for conversion to finish
             CLEARBIT(AD2CON1bits.DONE); // MUST HAVE! clear conversion done bit
             // TODO: need to do a mapping from ADC2BUF0 to js_x
-            js_x = ((float)(Xmax - ADC2BUF0)/(Xmax - Xmin))*(TXmax - TXmin);
+            js_x = ((float)(Xmax + BOUNDARY_BUF - ADC2BUF0)/(Xmax + BOUNDARY_BUF - Xmin))*(TXmax - TXmin) + TXmin;
 
             AD2CHS0bits.CH0SA = 0x005; //set ADC to Sample AN5 pin, Joystick Y-axis
             SETBIT(AD2CON1bits.SAMP); //start to sample
             while(!AD2CON1bits.DONE); // wait for conversion to finish
             CLEARBIT(AD2CON1bits.DONE); // MUST HAVE! clear conversion done bit
             // TODO: need to do a mapping from ADC2BUF0 to js_y
-            js_y = ((float)(Ymax - ADC2BUF0)/(Ymax - Ymin))*(TXmax - TXmin);
+            js_y = ((float)(Ymax + BOUNDARY_BUF - ADC2BUF0)/(Ymax + BOUNDARY_BUF - Ymin))*(TYmax - TYmin) + TYmin;
 
             lcd_locate(0,1);
             lcd_printf("js_x:%d     ", js_x);
@@ -286,6 +300,7 @@ int main(){
             lcd_printf("x:%d    ", x_current);
             lcd_locate(0,6);
             lcd_printf("y:%d    ", y_current);
+
         // display(x_set, y_set, js_x, js_y);
         }
         
