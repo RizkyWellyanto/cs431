@@ -9,13 +9,14 @@
 #include "pid_controller.h"
 #include <stdlib.h>
 
-void pid_controller_init(pid_controller_t * controller, float trim, float Delta_time, float Kp, float Ki, float Kd) {
+void pid_controller_init(pid_controller_t * controller, float trim, float delta_threshold, float Delta_time, float Kp, float Ki, float Kd) {
     controller->current_delta = 0.0f;
     controller->previous_delta = 300.0f;
     controller->integral = 0.0f;
     controller->derivative = 0.0f;
 
     controller->trim = trim;
+    controller->delta_threshold = delta_threshold;
     controller->delta_time = Delta_time;
 
     controller->kp = Kp;
@@ -28,8 +29,8 @@ uint16_t feed_back(pid_controller_t * controller, float pos, float target) {
     controller->current_delta = target - pos;
 
     // TODO: handling losing contact: check the first derivative
-//    if (abs(controller->current_delta - controller->previous_delta) > THRESHOLD)
-//        controller->current_delta = controller->previous_delta;
+    if (abs(controller->current_delta) > controller->delta_threshold)
+        controller->current_delta = controller->previous_delta;
 
     // Integration feedback
     controller->integral += controller->current_delta * controller->delta_time;
