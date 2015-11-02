@@ -23,7 +23,7 @@ void pid_controller_init(pid_controller_t * controller, float trim, float Delta_
     controller->kd = Kd;
 }
 
-uint16_t feed_back(pid_controller_t * controller, uint16_t pos, uint16_t target) {
+uint16_t feed_back(pid_controller_t * controller, float pos, float target) {
     // Proportional feedback
     controller->current_delta = target - pos;
 
