@@ -160,7 +160,7 @@ int main(){
     Debouncer thumb; // thumb
     uint16_t thumbStatus = UNSTABLE;
 
-    // calibrate joystick
+    // calibrate joystick and flextouch
     SETBIT(TRISDbits.TRISD10); // set thumb as togle
 
     uint16_t X;
