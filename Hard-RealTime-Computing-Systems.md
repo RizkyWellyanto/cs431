@@ -22,3 +22,10 @@ harm.
  * Corollary: A system must always be designed to resist the worst possible combination
 of circumstances.
 
+## The meaning of *real-time*
+***Time***: the correctness of the system depends not only on the logical
+result of the computation but also on the time at which the results are produced.
+
+***Real***: the reaction of the systems to external events must occur
+*during* their evolution.
+
