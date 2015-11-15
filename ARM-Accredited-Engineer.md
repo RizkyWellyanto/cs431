@@ -71,7 +71,7 @@ e.g. *ARMv7-M Architecture Reference Manual (reference 1)* (**must read**) conta
 * Memory model
 * Debug architecture
 
-e.g. * Technical Reference Manual (TRM)* contains:
+e.g. *Technical Reference Manual (TRM)* contains:
 * Processor specific information, such as interface details and instruction timing.
 
 e.g. the *Cortex-M3/M4 Devices Generic User Guides* (references 2 and 3) covers:
@@ -292,7 +292,7 @@ This allows low-cost debug adaptors to be developed which work for
 multiple development toolchains.
 
 ### Areas of standardization in **CMSIS-Core**: an **API**
-From a software development point of view, the CMSIS-Core standardizes provides:
+From a software development point of view, the CMSIS-Core standard provides:
 * **Standardized definitions** for the processor’s peripherals.
  * registers in **NVIC**
  * a system tick timer in the processor (**SysTick**)
@@ -315,7 +315,7 @@ In addition:
 
 ### Organization of **CMSIS-Core**
 The **CMSIS** files are integrated into device-driver library packages from microcontroller
-vendors. Some of the files in the device-driver library are prepared by ARM
+vendors. Some of the files in the device-driver library are prepared by ARM
 and are common to various microcontroller vendors. Other files are vendor/device
 specific. 
 
@@ -364,7 +364,7 @@ You can download the latest version of the CMSIS source package from [arm.com](h
 ## General information
 
 ### Processor type
-ARM Cortex-M are 32-bit **RISC** processors
+ARM Cortex-M are 32-bit **RISC** (Reduced instruction set computing) processors
 * 32-bit registers
 * 32-bit internal data path
 * 32-bit bus interface
@@ -422,10 +422,10 @@ the *Advanced Microcontroller Bus Architecture (**AMBA**)* standard.
 The Cortex-M3/4 processors do not have memories
 * no SRAM, no cache
 * Instead, they come with a generic on-chip bus interface, so microcontroller vendors can add their own memory system to their design.
- * typically, the microcontroller vendor will need to add:
-  * Program memory, typically flash
-  * Data memory, typically SRAM
-  * Peripherals
+* typically, the microcontroller vendor will need to add:
+ * Program memory, typically flash
+ * Data memory, typically SRAM
+ * Peripherals
 
 main bus interface protocol:
 * **AHB Lite** (Advanced High-performance Bus)
