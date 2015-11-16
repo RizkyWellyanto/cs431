@@ -768,6 +768,7 @@ The APSR contains status flags for:
 * SIMD operations (GE bits)
 
 ![alu-flags](https://cloud.githubusercontent.com/assets/14265605/11187816/8b708d92-8c4d-11e5-8a37-2f6411dc8f27.png)
+* available in all ARM processors including the Cortex-M0 processor.
 
 e.g.
 ```
@@ -782,6 +783,13 @@ e.g.
 0xA0000000  0xA0000000 // Result ¼ 0x00000000, N=0, Z=1, C=1, V=0
 ```
 
+The `Carry` bit of APSR can also be used to extend add and subtract operations to over 32 bits:
+```
+// Calculating Z = X + Y, where X, Y and Z are all 64-bit
+Z[31:0] = X[31:0] + Y[31:0]; // Calculate lower word addition,
+// carry flag get updated
+Z[63:32] = X[63:32] + Y[63:32] + Carry; // Calculate upper word addition
+```
 
 
 
