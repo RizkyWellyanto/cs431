@@ -85,5 +85,7 @@ Non-real-time system semaphores suffer from ***priority inversion***.
 
 *Real-time Euclid*, *Real-time Cocurrent C*.
 
+> ***Real-time systems must be analyzable and predictable.***
+
 # Chap 2: Basic Concepts
 
