@@ -32,6 +32,8 @@ result of the computation but also on the time at which the results are produced
 The system time is measured using the time in the real-world controlled environment (external time).
 * the environment is always an essential component of any real-time system.
 
+![real-time-control-system](https://cloud.githubusercontent.com/assets/14265605/11172068/da258b56-8bc4-11e5-8e95-fbbdb73f4b09.png)
+
 The objective of fast computing is to minimize the average response
 time of a given set of tasks, whereas the ***objective*** of ***real-time*** computing is to meet the individual
 timing requirement of each task.
