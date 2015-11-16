@@ -29,3 +29,22 @@ result of the computation but also on the time at which the results are produced
 ***Real***: the reaction of the systems to external events must occur
 *during* their evolution.
 
+The system time is measured using the time in the real-world controlled environment (external time).
+* the environment is always an essential component of any real-time system.
+
+The objective of fast computing is to minimize the average response
+time of a given set of tasks, whereas the ***objective*** of ***real-time*** computing is to meet the individual
+timing requirement of each task.
+* Hence, rather than being fast, a real-time computing system should be predictable.
+
+## Real-time tasks
+**Hard**: A real-time task is said to be hard if producing the results after its deadline
+may cause catastrophic consequences on the system under control.
+
+**Firm**: A real-time task is said to be firm if producing the results after its deadline
+is useless for the system, but does not cause any damage.
+
+**Soft**: A real-time task is said to be soft if producing the results after its deadline
+has still some utility for the system, although causing a performance degradation.
+
+
