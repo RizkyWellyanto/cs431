@@ -668,6 +668,7 @@ the floating point unit or not.
 ![control-register](https://cloud.githubusercontent.com/assets/14265605/10670730/840cb24c-78ac-11e5-9b56-dabd60e3fa08.png)
 
 ![bit-fields-in-controlregister](https://cloud.githubusercontent.com/assets/14265605/10670796/eb83726c-78ac-11e5-809d-8e28c54e82e2.png)
+
 A program in unprivileged access level cannot switch itself back to privileged
 access level. If it is necessary to switch the processor back to using privileged access level in
 Thread mode, then the exception mechanism is needed:
@@ -710,7 +711,7 @@ int in_privileged(void)
 After modifying the CONTROL register, architecturally an Instruction Synchronization
 Barrier (ISB) instruction (or __ISB() function in CMSIS compliant
 driver) should be used to ensure the effect of the change applies to subsequent
-code. Due to the simple nature of the Cortex-M3, Cortex-M4, Cortex-M0þ,
+code. Due to the simple nature of the Cortex-M3, Cortex-M4, Cortex-M0+,
 Cortex-M0, and Cortex-M1 pipeline, omission of the ISB instruction does not
 cause any problem.
 
@@ -761,8 +762,25 @@ STR R2,[R0] ; Write back modified value to CPACR
 ![cpacr-bif-field](https://cloud.githubusercontent.com/assets/14265605/10671475/623174ec-78b0-11e5-93ea-104ea0db7495.png)
 
 ## Behavior of the application program status register (APSR)
+The APSR contains status flags for:
+* integer operations (N-Z-C-V bits): similar to ALU flags.
+* saturation arithmetic (Q bit)
+* SIMD operations (GE bits)
 
+![alu-flags](https://cloud.githubusercontent.com/assets/14265605/11187816/8b708d92-8c4d-11e5-8a37-2f6411dc8f27.png)
 
+e.g.
+```
+0x70000000 + 0x70000000 // Result ¼ 0xE0000000, N=1, Z=0, C=0, V=1
+0x90000000 + 0x90000000 // Result ¼ 0x30000000, N=0, Z=0, C=1, V=1
+0x80000000 + 0x80000000 // Result ¼ 0x00000000, N=0, Z=1, C=1, V=1
+0x00001234  0x00001000 // Result ¼ 0x00000234, N=0, Z=0, C=1, V=0
+0x00000004  0x00000005 // Result ¼ 0xFFFFFFFF, N=1, Z=0, C=0, V=0
+0xFFFFFFFF  0xFFFFFFFC // Result ¼ 0x00000003, N=0, Z=0, C=1, V=0
+0x80000005  0x80000004 // Result ¼ 0x00000001, N=0, Z=0, C=1, V=0
+0x70000000  0xF0000000 // Result ¼ 0x80000000, N=1, Z=0, C=0, V=1
+0xA0000000  0xA0000000 // Result ¼ 0x00000000, N=0, Z=1, C=1, V=0
+```
 
 
 
