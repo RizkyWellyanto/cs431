@@ -775,12 +775,12 @@ e.g.
 0x70000000 + 0x70000000 // Result ¼ 0xE0000000, N=1, Z=0, C=0, V=1
 0x90000000 + 0x90000000 // Result ¼ 0x30000000, N=0, Z=0, C=1, V=1
 0x80000000 + 0x80000000 // Result ¼ 0x00000000, N=0, Z=1, C=1, V=1
-0x00001234  0x00001000 // Result ¼ 0x00000234, N=0, Z=0, C=1, V=0
-0x00000004  0x00000005 // Result ¼ 0xFFFFFFFF, N=1, Z=0, C=0, V=0
-0xFFFFFFFF  0xFFFFFFFC // Result ¼ 0x00000003, N=0, Z=0, C=1, V=0
-0x80000005  0x80000004 // Result ¼ 0x00000001, N=0, Z=0, C=1, V=0
-0x70000000  0xF0000000 // Result ¼ 0x80000000, N=1, Z=0, C=0, V=1
-0xA0000000  0xA0000000 // Result ¼ 0x00000000, N=0, Z=1, C=1, V=0
+0x00001234 - 0x00001000 // Result ¼ 0x00000234, N=0, Z=0, C=1, V=0
+0x00000004 - 0x00000005 // Result ¼ 0xFFFFFFFF, N=1, Z=0, C=0, V=0
+0xFFFFFFFF - 0xFFFFFFFC // Result ¼ 0x00000003, N=0, Z=0, C=1, V=0
+0x80000005 - 0x80000004 // Result ¼ 0x00000001, N=0, Z=0, C=1, V=0
+0x70000000 - 0xF0000000 // Result ¼ 0x80000000, N=1, Z=0, C=0, V=1
+0xA0000000 - 0xA0000000 // Result ¼ 0x00000000, N=0, Z=1, C=1, V=0
 ```
 
 The `Carry` bit of APSR can also be used to extend add and subtract operations to over 32 bits:
