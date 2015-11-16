@@ -49,4 +49,18 @@ is useless for the system, but does not cause any damage.
 **Soft**: A real-time task is said to be soft if producing the results after its deadline
 has still some utility for the system, although causing a performance degradation.
 
+## Features of Real-time Systems
+**Timeliness**
+**Predictability**
+**Efficiency**: most real-time systems are embedded systems.
+**Robustness**: Real-time systems need to survive peak-load conditions.
+**Fault tolerance**: Single H/S failures should not crash the whole system.
+**Maintainability**: Hard real-time systems last a long time.
+
+### Achieving predictability
+*Non-deterministic factors*: 
+* CPU: prefetcher, piplining, cache, DMA(CPU and I/O share the same bus, depending on how the system handles when I/O transfer and CPU memory cycle happen at the same time. *cycle stealing*: hard to predictibility. CPU waits DMA. *time-slice method*: more expensive but predictable.).
+* OS: scheduling algorithm, synchronization mechanism, the types of semaphores, the memory management policy, the communication semantics, the interrupt handling mechanism.
+
+
 
