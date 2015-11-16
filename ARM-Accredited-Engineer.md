@@ -763,10 +763,11 @@ STR R2,[R0] ; Write back modified value to CPACR
 
 ## Behavior of the application program status register (APSR)
 The APSR contains status flags for:
-* integer operations (N-Z-C-V bits): similar to ALU flags.
+* integer operations (N-Z-C-V bits): ALU flags.
 * saturation arithmetic (Q bit)
 * SIMD operations (GE bits)
 
+### ALU flags
 ![alu-flags](https://cloud.githubusercontent.com/assets/14265605/11187816/8b708d92-8c4d-11e5-8a37-2f6411dc8f27.png)
 * available in all ARM processors including the Cortex-M0 processor.
 
@@ -791,6 +792,7 @@ Z[31:0] = X[31:0] + Y[31:0]; // Calculate lower word addition,
 Z[63:32] = X[63:32] + Y[63:32] + Carry; // Calculate upper word addition
 ```
 
+### Q status flag
 
 
 
