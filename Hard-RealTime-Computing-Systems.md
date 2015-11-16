@@ -1,4 +1,4 @@
-# A General View
+# Chap 1: A General View
 
 Laws on real-time systems:
 * Murphy’s General Law
@@ -63,4 +63,27 @@ has still some utility for the system, although causing a performance degradatio
 * OS: scheduling algorithm, synchronization mechanism, the types of semaphores, the memory management policy, the communication semantics, the interrupt handling mechanism.
 
 
+#### Handling interrupts
+Interrupts due to I/O requests: must be able to be handled w/o unbounded delay.
+
+#### System calls
+Each kernel primitive should be *preemptable*.
+
+#### Semaphores
+Non-real-time system semaphores suffer from ***priority inversion***.
+* ***Basic Priority Inheritance***, ***Priority Ceiling*** and ***Stack Resource Policy*** policies are the rescue.
+ * needs a substantial mod of the kernel.
+
+#### Memory Management
+*demand paging* is not suitable for real-time systems.
+* design choice for balancing *predictability* against *flexibility*
+
+#### Programming Languages
+*Dynamic data structures*: predictablity cannot be determined at compile time.
+*Recursions*: allowing recursion invalids schedulability analysis.
+*loops*: time-bound or not? if not, then troubles.
+
+*Real-time Euclid*, *Real-time Cocurrent C*.
+
+# Chap 2: Basic Concepts
 
