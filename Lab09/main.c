@@ -16,8 +16,8 @@
 #define RT_FREQ 50
 
 //setpoint parameters
-#define SPEED 0.08  // tested up to .12!
-#define RADIUS 350
+#define SPEED 0.1  // tested up to .12!
+#define RADIUS 300
 #define CENTER_X 1725
 #define CENTER_Y 1650
 
@@ -36,9 +36,9 @@
 
 #define ADC_SAMPLES (5)
 
-#define KP_X (0.0)
+#define KP_X (0.02)
 #define KI_X (0.0)
-#define KD_X (0.0)
+#define KD_X (0.01)
 
 #define KP_Y (0.02)
 #define KI_Y (0.0)
@@ -144,7 +144,7 @@ int main(){
   timers_initialize();          // Initialize timers
 
 
-  pid_controller_init(&controller_x, 290, 1000, 0.02, KP_X, KI_X, KD_X);
+  pid_controller_init(&controller_x, 285, 1000, 0.02, KP_X, KI_X, KD_X);
   pid_controller_init(&controller_y, 285, 1500, 0.02, KP_Y, KI_Y, KD_Y);
 
   
@@ -192,8 +192,8 @@ int main(){
       //lcd_printf("Xf(t)=%u, (%4.1f)", Xpos, Xpos_set);
       //lcd_locate(0,2);
       //lcd_printf("x%4u (%4.1f)     ", Xpos, Xpos_set);
-      lcd_locate(0,3);
-      lcd_printf("y%4u (%4.1f)     ", Ypos, Ypos_set);
+      //lcd_locate(0,3);
+      //lcd_printf("y%4u (%4.1f)     ", Ypos, Ypos_set);
 
       //lcd_locate(0,4);
       //lcd_printf("x%u          ", Xpos);
