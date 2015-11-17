@@ -862,6 +862,11 @@ reading the vector table.
 The PSP must be initialized by the software before being used.
 
 ### Memory protection unit (MPU)
+In some cases the MPU is controlled by an embedded OS, and memory permissions
+are configured for each task. In other cases the MPU is configured just to protect
+a certain memory region; for example, to make a memory range read only.
+
+## Exceptions and Interrupts
 
 
 
