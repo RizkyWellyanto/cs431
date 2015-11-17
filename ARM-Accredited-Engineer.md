@@ -815,7 +815,7 @@ and have the PUSH instruction to store data in stack and the POP instruction
 to retrieve data from stack. The current selected stack pointer is automatically
 adjusted for each PUSH and POP operation.
 
-ARM stack model is *full-descending stack*:
+ARM stack model is *full-descending stack* (SP decrement before store):
 ![stack](https://cloud.githubusercontent.com/assets/14265605/11200921/48989170-8c9f-11e5-863c-a6ea146c62e0.png)
 
 Use stack for function call:
@@ -896,9 +896,81 @@ executes the reset handler in Thread mode.
 * the exception number in IPSR (Interrupt Program Status Register) is read as zero.
 
 ### Nested vectored interrupt controller (NVIC)
+NVIC is a part of the processor. It is programmable and its registers are located in the SCS of the [memory map](https://github.com/bo-rc/cs431/blob/master/ARM-Accredited-Engineer.md#memory-system-1).
 
+The NVIC handles the exceptions and interrupt configurations, prioritization, and
+interrupt masking. The NVIC has the following features:
+***Flexible exception and interrupt management***: can be enabled or disabled and can have its
+pending status set or cleared by software.
 
+***Nested exception/interrupt support*** (preemption, nesting of exception services w/o software overhead)
 
+***Vectored exception/interrupt entry***: The Cortex-M processors automatically locate the starting point of the exception handler from a vector table in the memory.
 
+***Interrupt Masking***: use of PRIMASK and BASEPRI registers to select mask exceptions.
+
+### Vector Table
+The vector table is relocatable and the relocation
+is controlled by a programmable register in the NVIC called the Vector Table Offset
+Register (VTOR). After reset, the VTOR is reset to 0; therefore, the vector table is
+located at address 0x0 after reset.
+* NVIC's registers are in SCS(0xE000E000) but Vector Table is typically at 0x0.
+ * so exception number 1 (the reset vector) is at 0x00000004
+ * exception number 2 (the NMI vector) is at 0x00000008
+ * The address 0x00000000 is used to store the starting value of the MSP.
+
+![vector-table](https://cloud.githubusercontent.com/assets/14265605/11202339/b35d9804-8cac-11e5-8e56-ba8862fed711.png)
+
+### Fault Handling
+![fault-handling](https://cloud.githubusercontent.com/assets/14265605/11202377/2ebb7dc2-8cad-11e5-944e-b2217336ee21.png)
+
+## System control block (SCB)
+
+The SCB contains various registers for:
+* Controlling processor configurations (e.g., low power modes)
+* Providing fault status information (fault status registers)
+* Vector table relocation (VTOR)
+
+The SCB is memory-mapped in the SCS.
+* SCB is merged into the NVIC unit.
+
+## Debug
+There are two types of interfaces provided in the Cortex-M processors: debug and trace.
+
+*Debug*: The debug interface allows a debug adaptor to connect to a Cortex-M microcontroller
+to control the debug features and access the memory space on the chip.
+* JTAG(uses 4 or 5 pins)
+* Serial Wire Debug (SWD, 2 pins)
+
+![debug](https://cloud.githubusercontent.com/assets/14265605/11202455/02d8d7da-8cae-11e5-98c5-685d4a97050f.png)
+
+*Trace*: The trace interface is used to collect information from the processor during runtime
+such as data, event, profiling information, or even complete details of program
+execution.
+* Serial Wire Viewer (SWV, single pin)
+* Trace Port (multi-pin protocol)
+
+![trace](https://cloud.githubusercontent.com/assets/14265605/11202585/41aea9ca-8caf-11e5-93ca-858f514c5a8a.png)
+
+## Reset and reset sequence
+Three types of reset:
+* Power on reset: reset everything in the microcontroller. This includes the
+processor and its debug support component and peripherals.
+* System reset: reset just the processor and peripherals, but not the debug support
+component of the processor.
+* Processor reset: reset the processor only.
+
+The debug host can generate a system reset or processor reset via
+a register in the System Control Block (SCB).
+
+![reset](https://cloud.githubusercontent.com/assets/14265605/11202696/74cf17b2-8cb0-11e5-81a2-2e4bf127c74d.png)
+* This two-step stack initialization allows a microcontroller device with external memory to use the
+external memory for the stack:
+ * it can boot up with the stack placed in a small internal on-chip SRAM, and initialize an external memory controller while in the reset handler, and then execute the C startup code, which then sets up the stack memory to the external memory.
+
+![initial-stack-pointer](https://cloud.githubusercontent.com/assets/14265605/11202751/2c0ac99e-8cb1-11e5-9cb1-a60da827f499.png)
+* note that the LSB of the vector in 0x00000004 is 1 to indicate the Thumb code.
+
+# Chapter 5: 
 
 
