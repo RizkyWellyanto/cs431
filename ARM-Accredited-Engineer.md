@@ -826,6 +826,42 @@ the value of LR (R14) to the stack memory, and popping it back to PC (R15) at
 the end of the subroutine/function:
 ![combine-stack-and-link](https://cloud.githubusercontent.com/assets/14265605/11201037/2d54da1c-8ca0-11e5-9d43-eaffa5e68900.png)
 
+#### Two stack pointers
+**Main Stack Pointer (MSP)**: the default stack pointer used after reset, and
+is used for all exception handlers.
+
+**Process Stack Pointer (PSP)**: an alternate stack point that can only be
+used in Thread mode. It is usually used for application tasks in embedded systems
+running an embedded OS.
+
+Provided that you are in privileged level,
+you can access MSP and PSP using the following CMSIS functions:
+```c
+x = __get_MSP(); // Read the value of MSP
+__set_MSP(x); // Set the value of MSP
+x = __get_PSP(); // Read the value of PSP
+__set_PSP(x); // Set the value of PSP
+```
+
+To access MSP and PSP in assembly code:
+```assembly
+MRS R0, MSP ; Read Main Stack Pointer to R0
+MSR MSP, R0 ; Write R0 to Main Stack Pointer
+MRS R0, PSP ; Read Process Stack Pointer to R0
+MSR PSP, R0 ; Write R0 to Process Stack Pointer
+```
+
+Most application code does not need to access MSP and PSP explicitly. Access to
+MSP and PSP is often required for embedded OSs.
+* by reading the PSP, the OS can read data pushed to the stack from API calls.
+* the value of PSP is updated by context switching (CS) code during CS.
+
+After power up, the processor hardware automatically initializes the MSP by
+reading the vector table. 
+
+The PSP must be initialized by the software before being used.
+
+### Memory protection unit (MPU)
 
 
 
