@@ -793,6 +793,39 @@ Z[63:32] = X[63:32] + Y[63:32] + Carry; // Calculate upper word addition
 ```
 
 ### Q status flag
+It is used in saturation arithmetic instructions (e.g. `QADD16`). It is set when saturation occurs. It remains set until a software write to the APSR clears the Q bit.
+
+![qbit](https://cloud.githubusercontent.com/assets/14265605/11200475/24dca6d4-8c9c-11e5-9bd4-61f74955ebab.png)
+
+### GE (Greater-Equal) bits
+4-bit filed in Cortex-M4 only. It is used by SIMD operations. [Chapter 5]() has details.
+
+In most cases, each bit represents positive or overflow of
+SIMD operations for each byte.
+
+## Memory system
+
+![memory](https://cloud.githubusercontent.com/assets/14265605/11200729/dc1c24d6-8c9d-11e5-9c1e-4075bfa7d36f.png)
+
+* The memory map arrangement is consistent between all of the Cortex-M processors.
+
+### Stack memory
+ARM processors use the main system memory for stack memory operations,
+and have the PUSH instruction to store data in stack and the POP instruction
+to retrieve data from stack. The current selected stack pointer is automatically
+adjusted for each PUSH and POP operation.
+
+ARM stack model is *full-descending stack*:
+![stack](https://cloud.githubusercontent.com/assets/14265605/11200921/48989170-8c9f-11e5-863c-a6ea146c62e0.png)
+
+Use stack for function call:
+![use-stack](https://cloud.githubusercontent.com/assets/14265605/11201009/edf490a6-8c9f-11e5-9d54-ae137ca97cc8.png)
+
+You can also combine the return with a POP operation. This is done by first pushing
+the value of LR (R14) to the stack memory, and popping it back to PC (R15) at
+the end of the subroutine/function:
+![combine-stack-and-link](https://cloud.githubusercontent.com/assets/14265605/11201037/2d54da1c-8ca0-11e5-9d43-eaffa5e68900.png)
+
 
 
 
