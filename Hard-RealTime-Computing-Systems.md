@@ -108,8 +108,8 @@ Waiting state caused by resource constraints:
 * Resources: R = {R1, R2, ..., Rs}
 
 ***Scheduling*** means assigning processors from P and resources from R to tasks from Γ in order to complete all tasks under the specified constraints.
-* is NP-complete
- * NP: *Nondeterministic Polynomial time*: cannot be solved by a deterministic Turing machine (the set of rules prescribes at most one action to be performed for any given situation. ); CAN be solved by a Non-deterministic Turing machine.
- * NP-complete problem: solve THIS, you solve ALL that can be reduced to THIS.
-   * A decision problem Q is said to be NP-hard if all problems in NP are polynomially transformable to Q, but we cannot show that Q ∈ NP.
+* is **NP-complete**
+ * **NP**: *Nondeterministic Polynomial time*: cannot be solved by a *deterministic Turing machine* (the set of rules prescribes at most one action to be performed for any given situation. ); CAN be solved by a *Non-deterministic Turing machine*.
+ * **NP-complete** problem: whose solutions are sufficient to deal with any other **NP** problem in polynomial time. 
+   * A decision problem Q is said to be **NP-hard** if all problems in **NP** are polynomially transformable to Q, but we cannot show that Q ∈ **NP**.
  * NP is the class of decision problems that the proof of a "YES" cannot be solved in polynomial time by a deterministic Turing machine.
