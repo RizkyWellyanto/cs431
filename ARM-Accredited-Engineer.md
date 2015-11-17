@@ -971,6 +971,8 @@ external memory for the stack:
 ![initial-stack-pointer](https://cloud.githubusercontent.com/assets/14265605/11202751/2c0ac99e-8cb1-11e5-9cb1-a60da827f499.png)
 * note that the LSB of the vector in 0x00000004 is 1 to indicate the Thumb code.
 
-# Chapter 5: 
+# Chapter 5: Instruction Set
+
+
 
 
