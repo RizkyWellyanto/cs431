@@ -102,3 +102,12 @@ Waiting state caused by resource constraints:
 ![waiting-state](https://cloud.githubusercontent.com/assets/14265605/11218104/23bcc338-8d19-11e5-9e3f-6df713a99785.png)
 * a task *leaves* **waiting state** *to* the **ready state** for the scheduler to schedule according to ***priority***.
 
+## Scheduling problems
+* Tasks (Jobs): J = {J1, J2, ..., Jn}
+* Processors: P = {P1, P2, ..., Pm}
+* Resources: R = {R1, R2, ..., Rs}
+***Scheduling*** means assigning processors
+from P and resources from R to tasks from Γ in order to complete all tasks under the
+specified constraints.
+* NP-complete
+
