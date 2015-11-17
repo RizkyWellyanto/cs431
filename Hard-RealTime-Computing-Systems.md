@@ -139,6 +139,30 @@ Number of processors increased, computation times reduced, Precedence constraint
 
 # Chapter 3: APERIODIC TASK SCHEDULING
 
+## Earliest Due Date (EDD): tasks arrive at the same time
+*1*|*sync*|*Lmax*
+* uniprocessor, tasks are synchronous (arrive at the same time), no preemption, minimize the maximum of lateness.
+
+Theorem: Given a set of n independent tasks, any algorithm that
+executes the tasks in order of nondecreasing deadlines is optimal with respect to minimizing
+the maximum lateness.
+
+Time complexity: nlogn (sorting on priorities)
+
+notes: the optimality of the EDD algorithm cannot guarantee the feasibility of the
+schedule for any task set. It only guarantees that if a feasible schedule exists for a task
+set, then EDD will find it.
+
+## Earliest Deadline First (EDF): tasks with arbitrary arrival times.
+*1*|*preem*|*Lmax*
+
+Theorem: Given a set of n independent tasks with arbitrary arrival times,
+any algorithm that at any instant executes the task with the earliest absolute deadline
+among all the ready tasks is optimal with respect to minimizing the maximum lateness.
+
+Time complexity: nlogn
+
+EDF is optimal in the sense of feasibility.
 
 
 
