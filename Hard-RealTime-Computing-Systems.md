@@ -88,4 +88,17 @@ Non-real-time system semaphores suffer from ***priority inversion***.
 > ***Real-time systems must be analyzable and predictable.***
 
 # Chap 2: Basic Concepts
+## Terminologies
+![ready-queue](https://cloud.githubusercontent.com/assets/14265605/11217737/7056be58-8d17-11e5-88dd-429b0e1af754.png)
+
+![parameters](https://cloud.githubusercontent.com/assets/14265605/11218035/db44a238-8d18-11e5-8876-10888a2b2c44.png)
+
+## Task Constraints
+* Timing constraints
+* Precedence constraints
+* Resource constraints
+
+Waiting state caused by resource constraints:
+![waiting-state](https://cloud.githubusercontent.com/assets/14265605/11218104/23bcc338-8d19-11e5-9e3f-6df713a99785.png)
+* a task *leaves* **waiting state** *to* the **ready state** for the scheduler to schedule according to ***priority***.
 
