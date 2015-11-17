@@ -113,3 +113,34 @@ Waiting state caused by resource constraints:
  * **NP-complete** problem: whose solutions are sufficient to deal with any other **NP** problem in polynomial time. 
    * A decision problem Q is said to be **NP-hard** if all problems in **NP** are polynomially transformable to Q, but we cannot show that Q ∈ **NP**.
  * NP is the class of decision problems that the proof of a "YES" cannot be solved in polynomial time by a deterministic Turing machine.
+
+## Scheduling Algorithms
+*Preemptive* vs. *Non-preemptive*
+
+*Static* vs. *Dynamic*
+
+*Off-line* vs. *Online*
+
+*Optimal* vs. *Heuristic*
+
+***Guarantee-based Algorithm***: if taking a new task would voilate the guarantee of meeting all deadlines, the new task is rejected:
+![guarantee-based-scheduling](https://cloud.githubusercontent.com/assets/14265605/11224834/99234782-8d3c-11e5-8853-fffad09091f6.png)
+
+***Best-effort Algorithm***: may be OK for soft real-time systems
+
+## Metrics for performance evaluation
+The design of Cost functions:
+![cost-functions](https://cloud.githubusercontent.com/assets/14265605/11224915/f2beec88-8d3c-11e5-89f0-975c1433df83.png)
+
+## Scheduling Anomalies
+
+Those seemingly benign "improvements" can lead to deadline misses: *Anomalies* in real-time systems: 
+Number of processors increased, computation times reduced, Precedence constraints weakened, faster CPU.
+
+# Chapter 3: APERIODIC TASK SCHEDULING
+
+
+
+
+
+
