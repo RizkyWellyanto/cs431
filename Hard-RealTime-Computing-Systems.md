@@ -91,7 +91,7 @@ Non-real-time system semaphores suffer from ***priority inversion***.
 ## Terminologies
 ![ready-queue](https://cloud.githubusercontent.com/assets/14265605/11217737/7056be58-8d17-11e5-88dd-429b0e1af754.png)
 
-![parameters](https://cloud.githubusercontent.com/assets/14265605/11218035/db44a238-8d18-11e5-8876-10888a2b2c44.png)
+![concepts](https://cloud.githubusercontent.com/assets/14265605/11225529/43697ccc-8d40-11e5-819a-01faabaa49c6.png)
 
 ## Task Constraints
 * Timing constraints
