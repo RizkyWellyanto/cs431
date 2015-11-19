@@ -972,7 +972,24 @@ external memory for the stack:
 * note that the LSB of the vector in 0x00000004 is 1 to indicate the Thumb code.
 
 # Chapter 5: Instruction Set
+![isa](https://cloud.githubusercontent.com/assets/14265605/11278044/d20624b6-8eae-11e5-94fd-a7217e5ad1cd.png)
 
+When an operation can be carried out in 16-bit, the compiler will normally
+choose the 16-bit version to give a smaller code size. The 32-bit version might support
+a greater choice of registers (e.g., high registers), larger immediate data, longer
+address range, or a larger choice of addressing modes. However, for the same operation,
+the 16-bit version and the 32-bit version of an instruction will take the same
+amount of time to execute.
+
+What it means to software developers: choose processors and instructions accordingly:
+![view-isa](https://cloud.githubusercontent.com/assets/14265605/11278092/02690466-8eaf-11e5-8a03-cd8416b9233b.png)
+
+### No need to learn every instruction
+C compilers are good enough to generate efficient code.
+
+The free CMSIS-DSP library and various middleware (e.g., software
+libraries) help software developers to implement high-performance DSP
+applications without the need to dig into the details of each instruction.
 
 
 
