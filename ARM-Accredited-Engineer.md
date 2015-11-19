@@ -1007,5 +1007,100 @@ label
 ```
 * `label` is optional
   * can be used for addresses of instructions or data addresses (e.g. a lookup table)
+* `operand1` is usually the destination
+* Some instructions do not need any operand and some might need just one.
+* 
 
+Immediate data are usually prefixed with “#”:
+```
+MOVS R0, #0x12 ; Set R0 = 0x12 (hexadecimal)
+MOVS R1, #’A’ ; Set R1 = ASCII character A
+```
 
+In the GNU toolchain, the common assembly syntax is:
+```
+label:
+  mnemonic operand1, operand2,. /* Comments */
+```
+* the opcode and operands are the same as the ARM assembler
+* syntax for labels and comments are different
+
+The GNU version of the above code:
+```
+MOVS R0, #0x12 /* Set R0 = 0x12 (hexadecimal) */
+MOVS R1, #’A’ /* Set R1 = ASCII character A */
+```
+* gcc supports inline comment character `@`:
+```
+MOVS R0, #0x12 @ Set R0 = 0x12 (hexadecimal)
+MOVS R1, #’A’ @ Set R1 = ASCII character A
+```
+
+### Defining Constants
+```
+NVIC_IRQ_SETEN EQU 0xE000E100
+NVIC_IRQ0_ENABLE EQU 0x1
+...
+  LDR R0,=NVIC_IRQ_SETEN ; Put 0xE000E100 into R0
+                         ; LDR here is a pseudo instruction that will be converted
+                         ; to a PC relative literal data load by the assembler
+  MOVS R1, #NVIC_IRQ0_ENABLE ; Put immediate data (0x1) into
+                             ; register R1
+  STR R1, [R0] ; Store 0x1 the value of 0xE000E100, 
+               ; this enable external interrupt IRQ#0
+```
+* Defining Constants Syntax: `EQU`
+* `LDR` is a pesudo instruction: needed because the value (32-bit) is too large to be encoded in a single move immediate instruction.
+* With pesudo load: use `=`prefix, with immediate load: use `#`prefix.
+
+GNU toolchain assembler syntax:
+```
+.equ NVIC_IRQ_SETEN, 0xE000E100
+.equ NVIC_IRQ0_ENABLE, 0x1
+...
+LDR R0,=NVIC_IRQ_SETEN /* Put 0xE000E100 into R0
+                  LDR here is a pseudo instruction that will be
+                  converted to a PC relative load by the assembler */
+MOVS R1, #NVIC_IRQ0_ENABLE /* Put immediate data (0x1) into
+                              register R1 */
+STR R1, [R0] /* Store 0x1 to 0xE000E100, this enable
+                external interrupt IRQ#0 */
+```
+
+Another typical feature of most assembly tools is allowing data to be inserted inside
+the program, e.g.:
+```
+  LDR R3,=MY_NUMBER ; Get the memory location of MY_NUMBER
+  LDR R4, [R3] ; Read the value 0x12345678 into R4
+  ...
+  LDR R0,=HELLO_TEXT ; Get the starting address of HELLO_TEXT
+  BL PrintText ; Call a function called PrintText to
+               ; display string
+  ...
+  ALIGN 4 ; forces the following data to be aligned to a word boundary.
+MY_NUMBER DCD 0x12345678
+HELLO_TEXT DCB “Hello\n”, 0 ; Null terminated string
+```
+* By ensuring the data placed at MY_NUMBER is word aligned, the
+program will be able to access the data with just a single bus transfer, and
+the code can be more portable
+  * unaligned accesses are not supported in the Cortex-M0/M0+/M1 processors
+
+GNU version:
+```
+  LDR R3,=MY_NUMBER /* Get the memory location of MY_NUMBER */
+  LDR R4, [R3] /* Read the value 0x12345678 into R4 */
+  ...
+  LDR R0,=HELLO_TEXT /* Get the starting address of
+                        HELLO_TEXT */
+  BL PrintText /* Call a function called PrintText to
+  display string */
+...
+  .align 4
+MY_NUMBER:
+  .word 0x12345678
+HELLO_TEXT:
+  .asciz “Hello\n” /* Null terminated string */
+```
+
+  
