@@ -1169,11 +1169,41 @@ the IF-THEN (IT) instruction, which will require the suffix to indicate the cond
 |VMSR |FPSCR, |R3 |; Copy R3 to FPSCR, a floating point unit system register|
 |VMOV.F32 |S0, |#1.0 |; Move single-precision value into floating point register S0|
 
+#### set a register to a 32-bit immediate data value
+The most common method is to use a pseudo instruction called “LDR”; e.g.:
+`LDR R0, =0x12345678 ; Set R0 to 0x12345678`
+* This is not a real instruction. The assembler converts this instruction into a memory
+transfer instruction and a literal data item stored in the program image:
+```
+LDR R0, [PC, #offset] ; the assembler will calculate the correct offset
+..
+DCD 0x12345678
+```
 
+##### Literal Pool
+Usually the assembler groups various literal data (e.g., DCD 0x12345678 in the above example)
+together into data blocks called ***literal pools***. Since the value of the offset in the `LDR` instruction is
+limited, a program will often need a number of literal pools so that the `LDR` instruction can access
+the literal data. Therefore we need to insert assembler directives like `LTORG` (or `.pool`) to tell the
+assembler where it can insert literal pools. Otherwise the assembler will try to put all the literal data
+after the end of the program code, which might be too far away for the `LDR` instruction to access it.
 
+Another way to generate a 32-bit immediate data value is to use a combination of
+MOVW and MOVT instructions. e.g.:
+```
+MOVW R0, #0x789A ; Set R0 to 0x0000789A
+MOVT R0, #0x3456 ; Set upper 16-bit of R0 to 0x3456,
+                 ; now R0 = 0x3456789A
+```
 
+The `LDR` method gives better readability, and the assembler might be able to reduce code
+size by reusing the same literal data.
 
+However, depending on the memory system design,
+in some cases the `MOVW` + `MOWT` method can result in faster code if a
+system-level cache is used and if the `LDR` resulted in a data cache miss.
 
+### Memory access 
 
 
 
