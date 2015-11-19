@@ -991,5 +991,21 @@ The free CMSIS-DSP library and various middleware (e.g., software
 libraries) help software developers to implement high-performance DSP
 applications without the need to dig into the details of each instruction.
 
+## Understanding the assembly language syntax
+In most situations, application code will be written in C or other high-level languages
+and therefore it is not necessary for most software developers to know the
+details of the instruction set.
+
+This book uses ARM assembler (`armasm`)
+* used in the Keil Microcontroller Development Kit for ARM (MDK-ARM). 
+* Assembly tools from different vendors (e.g., the GNU toolchain) have different syntaxes.
+
+**Instruction formatting**: 
+```
+label
+  mnemonic  operand1, operand2, ... ; Comments
+```
+* `label` is optional
+  * can be used for addresses of instructions or data addresses (e.g. a lookup table)
 
 
