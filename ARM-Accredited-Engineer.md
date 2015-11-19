@@ -1142,8 +1142,8 @@ for you which gives the minimum code size.
 Most of the instructions can be executed conditionally when used together with
 the IF-THEN (IT) instruction, which will require the suffix to indicate the condition.
 
-### Moving data within the processor
-**Instructions for Transferring Data within the Processor**
+### Moving data
+**Within the Processor**:
 
 |Instruction | Dest | Source | Operations |
 |:----------:|:----:|:------:|:----------:|
@@ -1157,6 +1157,17 @@ the IF-THEN (IT) instruction, which will require the suffix to indicate the cond
 |MOVT | R6, | #0x8765 |; Set the upper 16-bit of R6 to 0x8765|
 |MVN | R3, |R7 |; Move negative value of R7 into R3|
 
+**Between the FPU and Core Registers**:
+
+|Instruction | Dest | Source | Operations |
+|:----------:|:----:|:------:|:----------:|
+|VMOV |R0, |S0 |; Copy floating point register S0 to general purpose register R0|
+|VMOV |S0, |R0 |; Copy general purpose register R0 to floating point register S0|
+|VMOV |S0, |S1 |; Copy floating point register S1 to S0 (single precision)|
+|VMRS.F32 |R0, |FPSCR |; Copy value in FPSCR, a floating point unit system register to R0|
+|VMRS |APSR_nzcv, |FPSCR |; Copy flags from FPSCR to the flags in APSR|
+|VMSR |FPSCR, |R3 |; Copy R3 to FPSCR, a floating point unit system register|
+|VMOV.F32 |S0, |#1.0 |; Move single-precision value into floating point register S0|
 
 
 
