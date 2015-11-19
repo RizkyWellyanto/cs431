@@ -1103,4 +1103,69 @@ HELLO_TEXT:
   .asciz “Hello\n” /* Null terminated string */
 ```
 
-  
+![directives-for-inserting-data](https://cloud.githubusercontent.com/assets/14265605/11279101/2d4988d6-8eb4-11e5-8da5-4f3ea39becf8.png)
+
+![common-directives](https://cloud.githubusercontent.com/assets/14265605/11279130/5e0a7462-8eb4-11e5-956b-82236b1a3374.png)
+
+## Use of a suffix in instructions
+![suffixes](https://cloud.githubusercontent.com/assets/14265605/11287305/2ea210fa-8ee0-11e5-98fb-2889c5dc97db.png)
+
+Two types:
+* update the APSR flags:
+```
+MOVS R0, R1 ; Move R1 into R0 and update APSR
+MOV R0, R1 ; Move R1 into R0, and not update APSR
+```
+
+* conditional execution: see table above
+
+## Unified assembly language (UAL)
+UAL provides better portability between architectures.
+* e.g. When Thumb-2 technology arrived, almost all Thumb instructions were available
+in a version that updates APSR and a version that does not. As a result, traditional
+Thumb syntax can be problematic in Thumb-2 software development. UAL explicitly uses `S` suffix to solve this.
+
+Use UAL syntax with the `THUMB` directive. Use pre-UAL syntax with the `CODE16` directive.
+
+```
+ADDS R0, #1 ; Use 16-bit Thumb instruction by default
+            ; for smaller size
+ADDS.N R0, #1 ; Use 16-bit Thumb instruction (N=Narrow)
+ADDS.W R0, #1 ; Use 32-bit Thumb-2 instruction (W=wide)
+```
+* If no suffix is given, the assembler might choose the instruction
+for you which gives the minimum code size.
+* C compilers will use
+16-bit instructions if possible due to their smaller code size.
+
+## Instruction Set
+Most of the instructions can be executed conditionally when used together with
+the IF-THEN (IT) instruction, which will require the suffix to indicate the condition.
+
+### Moving data within the processor
+**Instructions for Transferring Data within the Processor**
+
+|Instruction | Dest | Source | Operations |
+|:----------:|:----:|:------:|:----------:|
+|MOV | R4, | R0 |; Copy value from R0 to R4|
+|MOVS | R4, | R0 |; Copy value from R0 to R4 with APSR (flags) update|
+|MRS | R7, | PRIMASK |; Copy value of PRIMASK (special register) to R7|
+|MSR | CONTROL, | R2 |; Copy value of R2 into CONTROL (special register)|
+|MOV | R3, | #0x34 |; Set R3 value to 0x34|
+|MOVS | R3, | #0x34 |; Set R3 value to 0x34 with APSR update|
+|MOVW | R6, | #0x1234 |; Set R6 to a 16-bit constant 0x1234|
+|MOVT | R6, | #0x8765 |; Set the upper 16-bit of R6 to 0x8765|
+|MVN | R3, |R7 |; Move negative value of R7 into R3|
+
+
+
+
+
+
+
+
+
+
+
+
+
