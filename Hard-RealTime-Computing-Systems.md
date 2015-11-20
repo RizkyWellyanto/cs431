@@ -191,6 +191,36 @@ EDF is no longer optimal in terms of feasibility if tasks cannot be preempted.
   * *non-idle*: permits the processor to be idle when there are active jobs.
 
 ## Non-preemptive Scheduling
+NP-hard problem. Exhaustive searching is not practical. 
+
+### Bratley's Algorithm: *1*|*NO_PREEM*|*FEASIBLE*
+Uses additional info. to prune the search tree and reduce the complexity.
+* a pruning technique to determine when a current search can be reasonably abandoned.
+* In practice, abandon the search when:
+  * the addition of any node to the current path causes a missed deadline.
+  * a feasible schedule is found at the current path.
+* improves average running time.
+
+e.g.
+![pruning](https://cloud.githubusercontent.com/assets/14265605/11294068/ef1fd5e8-8f25-11e5-9da6-cfe2c338a318.png)
+* the worst-case complexity is still `O(n*n!)`.
+* Bratley's algorithm can only be used in *off_line* mode when all task parameters are known.
+  * usually a *time-triggered system*: the resulting chedule, the *task activation list*, can be stored in data structure.
+
+### The Spring Algorithm: the search is driven by a *heuristic function* (*H*)
+*H* is applied to each of the tasks that remain to be scheduled. *H* is flexible:
+* if *H = a_i (arrival time)*: FirstComeFirstServe.
+* if *H = C_i*: ShortestJobFirst.
+* if *H = d_i*: EDF.
+
+*Backtracking* can be used to continue the search after a failure.
+
+## Scheduling with precedence constraints
+
+
+
+
+
 
 
 
