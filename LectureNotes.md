@@ -77,23 +77,6 @@ From a software perspective, this is a slight disadvantage because more instruct
 
 ## Laplace transform (control) and Fourier transform (signal processing)
 
-# Lecture 16
-
-## criticality vs. priority
-Criticality: importance of the task
-Priority: execution time.
-* which one should start first
-
-## real-time system requirements
-
-1. Schedulable utilization
-
-2. Worst-case response time for each of tasks
-
-3. Stability (getting critical tasks done)
-
-FAA forgids EDF scheduling because it aces at 1. but fails at 2. and 3.
-
 
 
 
