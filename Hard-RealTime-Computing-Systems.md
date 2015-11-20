@@ -139,8 +139,7 @@ Number of processors increased, computation times reduced, Precedence constraint
 
 # Chapter 3: APERIODIC TASK SCHEDULING
 
-## Earliest Due Date (EDD): tasks arrive at the same time
-*1*|*sync*|*Lmax*
+## Earliest Due Date (EDD): tasks arrive at the same time: *1*|*sync*|*Lmax*
 * uniprocessor, tasks are synchronous (arrive at the same time), no preemption, minimize the maximum of lateness.
 
 Theorem: Given a set of n independent tasks, any algorithm that
@@ -153,8 +152,7 @@ notes: the optimality of the EDD algorithm cannot guarantee the feasibility of t
 schedule for any task set. It only guarantees that if a feasible schedule exists for a task
 set, then EDD will find it.
 
-## Earliest Deadline First (EDF): tasks with arbitrary arrival times.
-*1*|*preem*|*Lmax*
+## Earliest Deadline First (EDF): tasks with arbitrary arrival times: *1*|*preem*|*Lmax*
 
 Theorem: Given a set of n independent tasks with arbitrary arrival times,
 any algorithm that at any instant executes the task with the earliest absolute deadline
@@ -163,8 +161,36 @@ among all the ready tasks is optimal with respect to minimizing the maximum late
 Time complexity: nlogn
 
 EDF is optimal in the sense of feasibility.
+* if a feasible schedule exists, EDF can find it.
+* also minimizes max_lateness.
+### Feasibility Guarantee Checks
+`c_i(t)`: the remaining worst-case exe time of task `J_i`.
+the worst-case finishing tiime of `J_i`: `f_i = Sum(1,i,c_k(t))`.
+The schedulability can be guaranteed by the following conditions: `Any i = 1, ..., n, Sum(1,i,c_k(t)) <= d_i`.
 
+**Feasibility Guarantee**: checked dynamically if tasks have dynamic activations
+```
+Algorithm: EDF_guarantee(J_vector, J_new)
+{
+  J_vector.push_back(J_new);
+  J_vector.sort_prio(); // ordered by deadline
+  t = current_time();
+  f_0 = 0;
+  foreach J_i in J_vector {
+    f_i = f_(i-1) + c_i(t);
+    if(f_i > d_i)
+      return(UNFEASIBLE);
+  }
+  return(FEASIBLE);
+}
+```
 
+EDF is no longer optimal in terms of feasibility if tasks cannot be preempted.
+* if a feasible schedule exists, EDF cannot guarantee to fiind it.
+* but if *non-idle algorithm* is not allowed, EDF is still the optimal.
+  * *non-idle*: permits the processor to be idle when there are active jobs.
+
+## Non-preemptive Scheduling
 
 
 
