@@ -193,7 +193,7 @@ EDF is no longer optimal in terms of feasibility if tasks cannot be preempted.
 ## Non-preemptive Scheduling
 NP-hard problem. Exhaustive searching is not practical. 
 
-### Bratley's Algorithm: *1*|*NO_PREEM*|*FEASIBLE*
+### Bratley's Algorithm: (*1*|*NO_PREEM*|*FEASIBLE*)
 Uses additional info. to prune the search tree and reduce the complexity.
 * a pruning technique to determine when a current search can be reasonably abandoned.
 * In practice, abandon the search when:
@@ -216,8 +216,34 @@ e.g.
 *Backtracking* can be used to continue the search after a failure.
 
 ## Scheduling with precedence constraints
+In general NP-hard. With assumptions, can be polynomial.
 
+### 1st assumption: sync: Latest Deadline First(LDF): (*1*|*PREC*, *SYNC*|*Lmax*)
 
+LDF selects the task with the latest deadline to be scheduled last. After enqueing is done, at runtime tasks are extracted from the head of the queue: the last task inserted in the queue will be executed first.
+
+### 2nd assumption: EDF with Precedence Constraints: (*1*|*PREC*, *PREEM*|*Lmax*)
+Can be solved in polynomial time only if tasks are preemptable.
+
+The basic idea: transform a set J of dependent tasks into a set of J* of independent tasks by an adequate modification of timing parameters.
+* then tasks are scheduled by EDF.
+* basically, all ***release times*** and ***deadlines*** are modified so that each task cannot start before its predecessors and connot preempt their successors.
+
+#### mod of release time
+We have the following observation:
+![release-time](https://cloud.githubusercontent.com/assets/14265605/11303630/7d0c68c4-8f69-11e5-9f8c-a8713e2f7d2b.png)
+
+The algorithm for modification of release time:
+![algorithm-release-time](https://cloud.githubusercontent.com/assets/14265605/11303673/a9152b0e-8f69-11e5-9419-d3d09f2f0cd2.png)
+
+#### mode of deadline
+We have the following observation:
+![mod-deadline](https://cloud.githubusercontent.com/assets/14265605/11303735/0c6b68da-8f6a-11e5-92ab-28a966d9bebe.png)
+
+The algorithm:
+![algorithm-deadline](https://cloud.githubusercontent.com/assets/14265605/11303766/411d7d70-8f6a-11e5-8746-f2ef56f6e606.png)
+
+#### 
 
 
 
