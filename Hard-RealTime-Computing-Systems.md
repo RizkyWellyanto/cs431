@@ -229,22 +229,33 @@ The basic idea: transform a set J of dependent tasks into a set of J* of indepen
 * then tasks are scheduled by EDF.
 * basically, all ***release times*** and ***deadlines*** are modified so that each task cannot start before its predecessors and connot preempt their successors.
 
-#### mod of release time
+#### mod of release time: `O(n^2)`
 We have the following observation:
+
 ![release-time](https://cloud.githubusercontent.com/assets/14265605/11303630/7d0c68c4-8f69-11e5-9f8c-a8713e2f7d2b.png)
 
 The algorithm for modification of release time:
+
 ![algorithm-release-time](https://cloud.githubusercontent.com/assets/14265605/11303673/a9152b0e-8f69-11e5-9419-d3d09f2f0cd2.png)
 
-#### mode of deadline
+#### mode of deadline: `O(n^2)`
 We have the following observation:
+
 ![mod-deadline](https://cloud.githubusercontent.com/assets/14265605/11303735/0c6b68da-8f6a-11e5-92ab-28a966d9bebe.png)
 
 The algorithm:
+
 ![algorithm-deadline](https://cloud.githubusercontent.com/assets/14265605/11303766/411d7d70-8f6a-11e5-8746-f2ef56f6e606.png)
 
-#### 
+The transformation algorithm ensures that if a feasible schedule exists for the modified
+task set J* under EDF, then the original task set J is also schedulable.
+* because The transformation algorithm preserves the timing and the precedence constraints.
 
+## Summary
+
+![summary-aperiodic-scheduling](https://cloud.githubusercontent.com/assets/14265605/11303956/5cae842a-8f6b-11e5-831e-fc22b275a9e9.png)
+
+# Chap 4: PERIODIC TASK SCHEDULING
 
 
 
