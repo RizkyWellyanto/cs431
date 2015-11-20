@@ -8,7 +8,7 @@ Laws on real-time systems:
 * Naeser’s Law
  * One can make something bomb-proof, not jinx-proof.
 * Troutman Postulates
- * 1. Any software bug will tend to maximize the damage.
+ * 1. Any software bug will tend to maximize the damage.C
  * 2. The worst software bug will be discovered six months after the field test.
 * Green’s Law
  * If a system is designed to be tolerant to a set of faults, there will always exist
@@ -137,7 +137,7 @@ The design of Cost functions:
 Those seemingly benign "improvements" can lead to deadline misses: *Anomalies* in real-time systems: 
 Number of processors increased, computation times reduced, Precedence constraints weakened, faster CPU.
 
-# Chapter 3: APERIODIC TASK SCHEDULING
+# Chap 3: APERIODIC TASK SCHEDULING
 
 ## Earliest Due Date (EDD): tasks arrive at the same time: *1*|*sync*|*Lmax*
 * uniprocessor, tasks are synchronous (arrive at the same time), no preemption, minimize the maximum of lateness.
