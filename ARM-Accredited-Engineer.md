@@ -1245,6 +1245,11 @@ Table 5.8 Memory Access Instructions with Immediate Offset
 | `STR Rd, [Rn, #offset]` | Store word to memory location `Rn + offset` |
 | `STRD Rd1,Rd2, [Rn, #offset]` | Store double-word to memory location `Rn + offset` |
 
+* Addressing with an offset is called *Pre-index Access Mode*: `LDRB R0, [R1, #0x3] ; Read a byte value from address R1+0x3, and store the read data in R0.`.
+  * The offset value can be positive or negative.
+
+
+
 
 
 
