@@ -1147,27 +1147,27 @@ the IF-THEN (IT) instruction, which will require the suffix to indicate the cond
 
 |Instruction | Dest | Source | Operations |
 |:----------:|:----:|:------:|:----------:|
-|MOV | R4, | R0 |; Copy value from R0 to R4|
-|MOVS | R4, | R0 |; Copy value from R0 to R4 with APSR (flags) update|
-|MRS | R7, | PRIMASK |; Copy value of PRIMASK (special register) to R7|
-|MSR | CONTROL, | R2 |; Copy value of R2 into CONTROL (special register)|
-|MOV | R3, | #0x34 |; Set R3 value to 0x34|
-|MOVS | R3, | #0x34 |; Set R3 value to 0x34 with APSR update|
-|MOVW | R6, | #0x1234 |; Set R6 to a 16-bit constant 0x1234|
-|MOVT | R6, | #0x8765 |; Set the upper 16-bit of R6 to 0x8765|
-|MVN | R3, |R7 |; Move negative value of R7 into R3|
+|`MOV` | `R4,` | `R0` |; Copy value from R0 to R4|
+|`MOVS`| `R4,` | `R0` |; Copy value from R0 to R4 with APSR (flags) update|
+|`MRS` | `R7,` | `PRIMASK` |; Copy value of PRIMASK (special register) to R7|
+|`MSR` | `CONTROL,` | `R2` |; Copy value of R2 into CONTROL (special register)|
+|`MOV` | `R3,` | `#0x34` |; Set R3 value to 0x34|
+|`MOVS`| `R3,` | `#0x34` |; Set R3 value to 0x34 with APSR update|
+|`MOVW`| `R6,` | `#0x1234` |; Set R6 to a 16-bit constant 0x1234|
+|`MOVT`| `R6,` | `#0x8765` |; Set the upper 16-bit of R6 to 0x8765|
+|`MVN` | `R3,` | `R7` |; Move negative value of R7 into R3|
 
 **Between the FPU and Core Registers**:
 
 |Instruction | Dest | Source | Operations |
 |:----------:|:----:|:------:|:----------:|
-|VMOV |R0, |S0 |; Copy floating point register S0 to general purpose register R0|
-|VMOV |S0, |R0 |; Copy general purpose register R0 to floating point register S0|
-|VMOV |S0, |S1 |; Copy floating point register S1 to S0 (single precision)|
-|VMRS.F32 |R0, |FPSCR |; Copy value in FPSCR, a floating point unit system register to R0|
-|VMRS |APSR_nzcv, |FPSCR |; Copy flags from FPSCR to the flags in APSR|
-|VMSR |FPSCR, |R3 |; Copy R3 to FPSCR, a floating point unit system register|
-|VMOV.F32 |S0, |#1.0 |; Move single-precision value into floating point register S0|
+|`VMOV` |`R0,` |`S0` |; Copy floating point register S0 to general purpose register R0|
+|`VMOV` |`S0,` |`R0` |; Copy general purpose register R0 to floating point register S0|
+|`VMOV` |`S0,` |`S1` |; Copy floating point register S1 to S0 (single precision)|
+|`VMRS.F32` |`R0,` |`FPSCR` |; Copy value in FPSCR, a floating point unit system register to R0|
+|`VMRS` |`APSR_nzcv,` |`FPSCR` |; Copy flags from FPSCR to the flags in APSR|
+|`VMSR` |`FPSCR,` |`R3` |; Copy R3 to FPSCR, a floating point unit system register|
+|`VMOV.F32` |`S0,` |`#1.0` |; Move single-precision value into floating point register S0|
 
 #### set a register to a 32-bit immediate data value
 The most common method is to use a pseudo instruction called “LDR”; e.g.:
@@ -1209,16 +1209,41 @@ Table 5.6 Memory Access Instructions for Various Data Sizes
 
 | Data Type | Load (Read from Memory) | Store (Write to Memory) |
 |:---------:|:-----------------------:|:-----------------------:|
-| 8-bit unsigned | LDRB | STRB |
-| 8-bit signed | LDRSB | STRB |
-| 16-bit unsigned | LDRH | STRH |
-| 16-bit signed | LDRSH | STRH |
-| 32-bit | LDR | STR |
-| Multiple 32-bit | LDM | STM |
-| Double-word (64-bit) | LDRD | STRD |
-| Stack operations (32-bit) | POP | PUSH |
+| 8-bit unsigned | `LDRB` | `STRB` |
+| 8-bit signed | `LDRSB` | `STRB` |
+| 16-bit unsigned | `LDRH` | `STRH` |
+| 16-bit signed | `LDRSH` | `STRH` |
+| 32-bit | `LDR` | `STR` |
+| Multiple 32-bit | `LDM` | `STM` |
+| Double-word (64-bit) | `LDRD` | `STRD` |
+| Stack operations (32-bit) | `POP` | `PUSH` |
 
+* The LDRSB and the LDRSH automatically perform a sign extend operation
+on the loaded data to convert it to a signed 32-bit value.
 
+Table 5.7 Memory Access Instructions for the Floating Point Unit
+
+| Data Type | Read from Memory (Load) | Write to Memory (Store) |
+|:---------:|:-----------------------:|:-----------------------:|
+| Single-precision data (32-bit) | `VLDR.32` | `VSTR.32` |
+| Double-precision data (64-bit) | `VLDR.64` | `VSTR.64` |
+| Multiple data | `VLDM` | `VSTM` |
+| Stack operations | `VPOP` | `VPUSH` |
+
+Table 5.8 Memory Access Instructions with Immediate Offset
+
+| Example of Pre-index Accesses Note: the #offset field is optional | Description |
+|:-----------------------------------------------------------------:|:-----------:|
+| `LDRB Rd, [Rn, #offset]` | Read byte from memory location `Rn + offset` |
+| `LDRSB Rd, [Rn, #offset]` | Read and signed extend byte from memory location `Rn + offset`|
+| `LDRH Rd, [Rn, #offset]` | Read half-word from memory location `Rn + offset` |
+| `LDRSH Rd, [Rn, #offset]` | Read and signed extended half-word from memory location `Rn + offset` |
+| `LDR Rd, [Rn, #offset]` | Read word from memory location `Rn + offset` |
+| `LDRD Rd1,Rd2, [Rn, #offset]` | Read double-word from memory location `Rn + offset` |
+| `STRB Rd, [Rn, #offset]` | Store byte to memory location `Rn + offset` |
+| `STRH Rd, [Rn, #offset]` | Store half-word to memory location `Rn + offset`|
+| `STR Rd, [Rn, #offset]` | Store word to memory location `Rn + offset` |
+| `STRD Rd1,Rd2, [Rn, #offset]` | Store double-word to memory location `Rn + offset` |
 
 
 
