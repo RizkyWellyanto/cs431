@@ -1,36 +1,12 @@
-#### TA's list
-Lecture1: Just a big picture of the course. 
-
-Lecture2: Understand data types and design choices(when to use which one),know things like lcd_printf,locate,etc. Know the representations of numbers in binary,hexadecimal. Be able to do bit operations on numbers,understand bit masks and when you would want to use them,understand debouncing(software debouncing)
-
-Lecture 3: This is something you should go through in detail. Understand ISR,nestable interrupts,also connect these ideas to what you performed in the labs, understand what each flag means, good idea to put some of the most important in your cheat sheet,disabling interrupts when would you do this?, race conditions
-
-Lecture 4: Go over all the calculations for DAC,ADC. Understand how you would set period, way to choose prescalar, perform any kind of calculation for finding out when an interrupt is triggered given some conditions. Good idea to note down some of the registers you used in labs onto your cheat sheet.
-
-Lecture 5: Understand drift,jitter, signal handling, when you would employ polling over interrupt and interrupt over polling,dealing with signals, go over examples.
-
-Lecture 6: Review everything in this lecture in detail.
-
-Lecture 7: Manchester coding,NZRI, basics of serial communication. Understand lab3.
-
-Lecture 8: Review everything in this lecture and solve quiz 5. This should help you in understanding.
-
-Lecture 9,10: Understand most important concepts,what everything means in an expression. Theoretical,practical frequencies. Get help from ECE majors if any of the topics confuse you.
-
-Lecture 11,12: Understand basic PID principles. What is P, what is I and what is D. Calculating eigen values. When is a system stable,unstable,marginally stable. Practice the control problem given to you. 
-
-
-# Lecture slides
-
-## Lec 1 Introduction
+# Lec 1 Introduction
 The next frontier is the research for the convergence between the cyber world and the physical world: ***Cyber Physical Systems***
 * Mainframes => Desktops and Internet => ubiquitous/physical computing => networked systems of embedded computing systems
 
 > [computing and communications technologies will be embedded into everyday objects of all kinds to allow objects to sense and react to their changing environments.](http://www.nap.edu/read/10193/chapter/1#xviii)
 
-## Lec 2 Lab board UI
+# Lec 2 Lab board UI
 
-### Using the LCD
+## Using the LCD
 
 LCD is connected to UART1
 ```c
@@ -54,13 +30,14 @@ void main()
 
     while(1); // idle task: once initialization is done, there is nothing to do for the main() program. while(1); prevents this thread from exiting.
 }
+```
 
 Be careful when choosing the data type: 
 * performing shifts on signed integer is not advised because (according to ANSI C) the result is machine dependent (arithmetic shift or logic shift).
 
 > write down a conversion table from binary to hex.
 
-### bit manipulation
+## bit manipulation
 ```c
 x |=0x01; // set LSB 1
 x ^=0x01; // toggle LSB
@@ -81,35 +58,35 @@ x ^= BV(2)|BV(4)|BV(5); // toggle bits 2,4,5 in x
 // and more powerful:
 x |= (y&BV(3))>>3<<6; // replace bit 6 of x with bit 3 of y 
 ```
-### Registers
+## Registers
 the dsPIC33f has 16-bit registers.
 * they are memory-mapped into the data address space.
 
 `p33Fxxxx` library allows registers be read and written by name as if they are variables.
 e.g. `T1CON = 0x0001; // sets the timer 1 configuration register /// datasheet says bit 0 is not implemented??`
 
-### Digital I/O
+## Digital I/O
 
 85 general purpose digital I/O pins divided into seven 16-bit ports (A - G).
 * `PORTAbits.x` `PORTCbits.x` `PORTGbits.x`
 
-#### Input or output direction of each pin may be selected individually using:
+### Input or output direction of each pin may be selected individually using:
 `TRISx` registers: Data Direction register
 * output(`0`)
 * input(`1`)
 
-#### Output pin
+### Output pin
 Bit in `PORTx` sets the output voltage low (`0`) or high (`1`).
 `PORTAbits.RA10 = 1; // sets pin RA10 high`
 
-#### Input pin
+### Input pin
 Bit in `PORTx` tells if the current input voltage is low (`0`) or high (`1`).
 `uint8_t test = PORTAbits.RA10; // sets test to input value of RA10`
 
 Bit in `OCDx` disables (`0`) or enables (`1`) and external pull-up resistor.
 `OCDAbits.RA10 = 1; // enables external pull-up resistor on RA10`
 
-### LEDs
+## LEDs
 
 5 LEDs are connected to digital I/O pins in PORTA bits 0, 4, 5, 9, and 10.
 e.g. `PORTAbits.RA0`: LED 0; `PORTAbits.RA10`: LED 4.
@@ -129,7 +106,7 @@ CLEARLED(PORTAbits.RA10); // turn off LED4
 ```
 
 
-### Joystick Buttons
+## Joystick Buttons
 Two buttons:
 * B1 is trigger
 * B2 is thumb
@@ -145,21 +122,21 @@ B1 is connected to `PORTE`. B2 to `PORTD`
 * `if (PORTEbits.RE8 == 0) // if B1 is pressed?`
 * `uint8_t x = (~PORTDbits.RD10); // set x to 1 if B2 is pressed, 0 otherwise`
 
-### [debouncing](http://www.ganssle.com/debouncing.pdf)
+## [debouncing](http://www.ganssle.com/debouncing.pdf)
 The bouncing only lasts for several milliseconds, but this is long enough to be noticeable on the microcontroller.
 
 There is no hardware low pass filter on the Flexui board.
 * a software debouncer is needed.
 * an [implementation](https://github.com/bo-rc/cs431/tree/master/Debouncer)
 
-## Lec3 Interrupts
+# Lec3 Interrupts
 
 Reading: lab manual pp. 9-10. Additional material is on the dsPIC datasheet (section 6) and the dsPIC C compiler manual (pp. 105-123).
 
 Interrupts are handled by hardware directly first.
 * below OS level
 
-### How can we correctly resume the process after an interrupt
+## How can we correctly resume the process after an interrupt
 **Hardware**: Save `PC` and status flags
 **User Application**: Save the registers and pop them back at the end
 *separation of responsibility*: Flexibility
@@ -167,24 +144,24 @@ Interrupts are handled by hardware directly first.
 
 When the interrupt handler starts, further interrupt is *Disabled* to allow for executing instructions atomically.
 
-### When some interrupt is more urgent, what would you do?
+## When some interrupt is more urgent, what would you do?
 Step 1: If you need to execute some instructions atomically, keep the interrupt disabled until it is done.
 Step 2: Next enable interrupts with higher priority.
 
-### When interrupt is caused by external device readings, how can the ISR share the data with applications who needs the data?
+## When interrupt is caused by external device readings, how can the ISR share the data with applications who needs the data?
 1. the application should block on a `mutex`.
 
 2. the ISR should:
  * move the data to the buffer
  * unlock the `mutex` to wake up the application waiting on the data
 
-### ISR and `mutex` and application and locked forever: i do not understand this slide.
+## ISR and `mutex` and application and locked forever: i do not understand this slide.
 
-### When ISR passes data to application by the sharing of global variables,
+## When ISR passes data to application by the sharing of global variables,
 Interrupt enable/disable must be used to avoid *race conditions*: An error condition peculiar to parallel programs in which the outcome of a program changes as the relative scheduling of different control flows varies.
 * In engineering, we would like the outcome be predictable and repeatable.
 
-### Using `mutex`
+## Using `mutex`
 ```c
 // process A
 while(1) {
@@ -203,7 +180,7 @@ while(1) {
 }
 ```
 
-### Race between ISR and User Process
+## Race between ISR and User Process
 
 Don't lock in user process with ISR: deadlock
 * hardware is designed to finish ISR before any application task can start.
@@ -219,7 +196,7 @@ Race conditions between User processes:
 Race conditions between a process and an ISR, or between different ISRs
 * disable interrupts
 
-### Interrupts
+## Interrupts
 ***Synchronous Interrupt*** (***exception*** in 80x86 manuals): produced by the CPU control unit while executing instructions.
 * synchronous because the control unit issues them only after terminating the execution of an instruction.
 * caused by programming errors or anomalous conditions that must be handled by the kernel.
@@ -230,7 +207,7 @@ Race conditions between a process and an ISR, or between different ISRs
 * issued by interval timers and I/O devices.
  * keystroke etc.
 
-### Interrupt Handling Sequence
+## Interrupt Handling Sequence
 
 Interrupt service routine is responsible to handle the event that caused the interrupt.
 
@@ -243,14 +220,14 @@ Content of registers need to be saved before it can be altered. When writing an 
 ![interrupt-model-dspic33f](https://cloud.githubusercontent.com/assets/14265605/10384999/ccc21396-6e08-11e5-9a94-b30b9c872caf.png)
 * [RETFIE](http://tutor.al-williams.com/) is exactly like a return, but it also sets the global interrupt enable (GIE). When a hardware interrupt occurs, it clears GIE and executes what amounts to a CALL instruction. Using RETFIE allows you to enable interrupts and return to the main program all in one step. If you don't want interrupts enabled again, just execute a RETURN instead.
 
-#### **Interrupt Vector Table**: the addresses of ISRs
+### **Interrupt Vector Table**: the addresses of ISRs
 
 Each ISR is identified by the starting address of the vector:
 ![interrupt-vector-table-dspic33f](https://cloud.githubusercontent.com/assets/14265605/10385121/5b041e78-6e0a-11e5-80cc-ab8e6cf36de5.png)
 * *Natural order priority*: used only to resolve conflicts between simultaneous pending interrupts with same priority level.
  * once the priority conflict is resolved and the exception process begins, the CPU can be interrupted only by a source with higher priority.
 
-### Interrupt handling and Interrupt flag in dsPIC33F
+## Interrupt handling and Interrupt flag in dsPIC33F
 An interrupt is triggered by an event that sets the Interrupt Flag (IFSx: Interrupt Flag Status Register).
 
 The corresponding interrupt flag must be cleared by software (inside the ISR).
@@ -259,7 +236,7 @@ If an interrupt condition occurs while the corresponding interrupt enable bit (I
 
 Each user interrupt can have a priority from 0 to 7 (with 1 being the lowest priority and 0 having the effect of disabling the interrupt source). The interrupt priority is set in the IPCx registers (Interrupt Priority Control Registers).
 
-#### Install and ISR
+### Install and ISR
 use macro:
 ```c
 void __attribute__ ((__interrupt__)) PRIMARY_NAME(void);
@@ -276,7 +253,7 @@ void __attribute__((__interrupt__)) _T1Interrupt(void)
 }
 ```
 
-### Nested Interrupts
+## Nested Interrupts
 Interrupts are nestable by default.
 * can be interrupted by a higher-level Interrupt.
 
@@ -288,16 +265,16 @@ When interrupt nesting is disabled, the user-assigned interrupt priority levels 
 
 The `IPL<2:0>` bits become read-only when interrupt nesting is disabled.
 
-### Disable Interrupt Instruction (DISI)
+## Disable Interrupt Instruction (DISI)
 The DISI instruction can disable interrupts with priorities from 1 to 6 for up to 16384 instruction cycles. This instruction is useful for executing time-critical code segments. The DISI instruction only disables interrupts with priority levels 1-6. Priority level 7 interrupts and all trap events can still interrupt the CPU when the DISI instruction is active.
 
-### TODO: look at lab, understand each flag.
+## TODO: look at lab, understand each flag.
 
-## Lec4 Timer, A/D
+# Lec4 Timer, A/D
 
 Read: lab manual (pp. 14-16, 29-32, and pp38-40). Additional material is on dsPic data sheet (section 16 (ADC)), MCP4822 data sheet, and manual of DAS1602 PCI I/O board
 
-### dsPIC Timer/Counters
+## dsPIC Timer/Counters
 The dsPic microcontroller has nine 16-bits (Timer1-Timer9) Timer/Counters.
 
 **Timer1** is Type A
@@ -311,7 +288,7 @@ The dsPic microcontroller has nine 16-bits (Timer1-Timer9) Timer/Counters.
 
 A *prescaler* may be used to slow down the timer frequency.
 
-#### Timer registers
+### Timer registers
 Each timer has the following r/w registers:
 * `TMRx`: 16-bit Timer Count register
  * e.g. `TMR2 = 0x00; // clear timer2 register`
@@ -335,7 +312,7 @@ When the timer is enabled, `TMRx` increments by one on every rising edge of the 
 * called "timerx expires".
 * After a period match, `TMRx` is automatically reset to `0`.
 
-#### How to operate a timer
+### How to operate a timer
 * disable and initialize Timer using `TxCON` register
 * clear the Timer register `TMRx`
 * set the period value in `PRx`
@@ -367,7 +344,7 @@ void initialize_Timer1(){
 * after first time, every `Max_Period * prescaler / clock frequency`.
  * `TCNT0` continues to increase past `OCR0` until it overflows.
 
-### A/D dsPIC board
+## A/D dsPIC board
 dsPIC board:
 * 2 Analog to Digital Converter (ADC)
  * 10-bit or 12-bit resolution
@@ -384,7 +361,7 @@ dsPIC board:
 |`RB15`| B    | ch15      | Balance board x-axis|
 |`RB9` | B    | ch9       | Balance board y-axis|
 
-#### Operations overview
+### Operations overview
 * Initialization
 * Select analog input pin (`AN0-31`)
 * Start conversion
@@ -401,17 +378,17 @@ CLEARBIT(AD2CON1bits.DONE); //MUST HAVE! clear conversion done bit
 maxX = ADC2BUF0; // retrieve value
 ```
 
-## The general conversion rule
+# The general conversion rule
 ![addc](https://cloud.githubusercontent.com/assets/14265605/10387207/18b48f9c-6e25-11e5-881c-145f293e389a.png)
 
-### Quantization
+## Quantization
 
 *quantization error*: suppose input range of -2.0 to +2.0 v and 8-bit ADC, 4.0 / 256 = 0.015625.
 
 *Quiz*: What are these ranges for? What should be the rule in picking a range?
 *Answer*: These ranges represent the max and min permitted voltages for the ADC. Pick the smallest range that still includes the max and min voltage values that can be read from the source.
 
-### D/A 
+## D/A 
 
 * Digital to Analog Converter (DAC)
  * 12-bit resolution
@@ -423,7 +400,7 @@ maxX = ADC2BUF0; // retrieve value
   * Bit 12 is Output Shutdown Control (set to 1 for “active mode operation”; Vout is available)
   * Bits 11-0 is the 12 bit data
 
-## Lec5 Periodic Tasks
+# Lec5 Periodic Tasks
 
 Read: Book: Programming for The Real World, Bill O. Gallmeister, O’Reilly&Associates, Inc.
 See pp.55-69. User guide of PCI-DAS1602-12
@@ -442,14 +419,14 @@ See pp.55-69. User guide of PCI-DAS1602-12
 Any task executes in the user space can be preempted by higher priority tasks, OS, signal handler and interrupt service routines.
 * The only place where we can execute a sequence of instructions without being interrupted or preempted is inside an interrupt (or signal) handler
 
-#### the root cause and fix of drift and jitter?
+### the root cause and fix of drift and jitter?
 The key to create jitters:
 * preempt the I/O operation
 
 The key to create drift:
 * preempt the start of next period.
 
-##### Knowing the cause, what is the key idea that can fix it? 
+#### Knowing the cause, what is the key idea that can fix it? 
 * Not allow preemption or interrupts to I/O or the start times of periods
 
 What is the mechanism to implement the key idea? 
@@ -470,7 +447,7 @@ The solution: ***virtualization***
  * Atomicity: without being interrupted by applications and by other signal handlers (unless you enables nested interrupts). But signal handlers can be interrupted by OS after the expiration of the timer set by the OS (staying too long in handler).
  * Extension: unlimited software timers
 
-### POSIX.1 Signals
+## POSIX.1 Signals
 
 Signals are similar to hardware interrupts. However, they are managed and delivered by the OS.
 * used for 
@@ -483,7 +460,7 @@ Signals are similar to hardware interrupts. However, they are managed and delive
 * Each process has its own signal mask.
 * child process inherits parent's mask.
 
-#### setting the process mask
+### setting the process mask
 ```c
 #include <signal.h>
 
@@ -495,7 +472,7 @@ Signals are similar to hardware interrupts. However, they are managed and delive
 
 There are two spare signals available to user applications: `SIGUSR1` and `SIGUSR2`. Any application can use them as it wants.
 
-#### Using signals
+### Using signals
 ![signal-handlers](https://cloud.githubusercontent.com/assets/14265605/10388517/653c7eaa-6e30-11e5-9a66-a45e707b9f94.png)
 * Signal handlers execute in user space
  * A signal handler can interact with the regular execution flow of the corresponding process by simply sharing global variables
@@ -582,7 +559,7 @@ Analog_Digital_Conv_ISR()
 
 Signal handlers do not run in multitasking: there is just one single process going off and handling various signals. Any time the signal handler blocks, the entire process blocks.
 
-## Lec6 periodic tasks 2
+# Lec6 periodic tasks 2
 
 Read: Book: Programming for The Real World, Bill O. Gallmeister, O’Reilly&Associates, Inc.
 See pp.69-82 and 173-193. Lab manual pp.33-35.
@@ -607,7 +584,7 @@ Unless `sig_atomic` is used, OS can still interrupt signal handlers after a time
 * In real time applications, we want to ensure that a low priority task can be preempted by higher priority tasks that are more urgent, but signal handlers cannot be interrupted. What should we do?
  * Ans: Get out of the way ASAP. That is, do the job that is necessary in the handler only. Typically, it is I/O. And pass the data to applications via shared variables.
 
-### [signals](http://perugini.cps.udayton.edu/teaching/courses/cps445/lecture_notes/signals.html)
+## [signals](http://perugini.cps.udayton.edu/teaching/courses/cps445/lecture_notes/signals.html)
 blocking != ignoring
 * a blocked signal is not thrown away
  * it is delivered when unblocked
@@ -619,4 +596,114 @@ use `write` in signal handlers rather than `fprintf` or `strlen` as `write` is *
 
 Signal handlers do not run in multitasking: there is just one single process going off and handling various signals. Any time the signal handler blocks, the entire process blocks.
 
+# Lec16: RMA Intro
 
+## real-time system requirements
+
+1. Schedulable utilization
+
+2. Worst-case response time for each of tasks
+
+3. Stability (getting critical tasks done)
+
+Quiz: Which task should have higher priority?
+* Answer: the task with higher rate (according to RM) unless the system is
+overloaded!
+
+Priorities should be assigned according to ***Rate*** not to *importance (criticality)*
+* otherwise there is no lower bound of processor utilization, below which tasks deadlines can be guaranteed.
+
+## criticality vs. priority
+Criticality: importance of the task
+
+Priority: proportional to job period.
+* determines which job should be scheduled first
+
+An important find in real-time computing theory is that importance may or
+may not correspond to scheduling priority.
+* Importance matters only when tasks cannot be scheduled (overload condition) without missing deadlines. 
+
+*Rate Monotonic* Scheduling [**RM**]: Tasks with smaller periods are assigned
+higher priorities (static priority).
+
+*Earliest Deadline First* [**EDF**]: Jobs are prioritized based on absolute
+deadlines (dynamic priority).
+
+For periodic tasks with relative deadlines equal to their periods:
+* RM priority assignment is the optimal static priority assignment
+ * No other static priority assignment can do better
+ * Yet, it cannot achieve 100% CPU utilization
+* Earliest deadline first scheduling is the optimal dynamic priority policy
+ * EDF can achieve 100% CPU utilization
+
+FAA forbids EDF scheduling because it aces at 1. but fails at 2. and 3.
+
+# Lec17: Exact Schedulability Analysis
+
+GRMS (***Generalized Rate-Monotonic Scheduling Theory***) is a practical theory that will enable you to design and
+analyze multi-threaded real time applications.
+* GRMS is supported by almost all the commercially available RTOS
+
+To achieve 100% utilization when using fixed priorities, assign periods so that all
+tasks are harmonic. This means that for each task, its period is an exact multiple of
+every other task that has a shorter period. 
+
+A set of n periodic tasks is schedulable if: 
+
+![least-upper-bound-utilization](https://cloud.githubusercontent.com/assets/14265605/11313731/c4b8374e-8fa4-11e5-89a4-5784dad3cf6a.png)
+* For harmonic task sets, the utilization bound is U(n)=1.00 for all n.
+Otherwise, for large n, the bound converges to ln2 ~ 0.69.
+* It is a sufficient condition
+ * hence, it is inconclusive if it fails!
+* most significant results in real-time scheduling theory
+
+## POSIX.4 scheduling interface
+
+`SCHED_FIFO`:
+`SCHED_RR`:
+`SCHED_OTHER`:
+
+`sched_get_priority_min()`
+`sched_get_priority_max()`
+
+`shield_yield()`
+
+`sched_rr_get_interval()`
+
+## POSIX.4 memory locking interface
+`mlock()` and `mlockall`
+
+## The Exact Schedulability Test
+The exact test for a task checks if this task can meet its first deadline.
+* If a task meets its first deadline when all higher priority tasks are
+started at the same time, then this task’s future deadlines will always be met. 
+ * It holds only for fixed priority scheduling!
+
+![exact-analysis](https://cloud.githubusercontent.com/assets/14265605/11314153/904c9302-8fa8-11e5-844a-96f252675320.png)
+
+*r_i*: the response time of job i.
+
+Both the Utilization Bound and the Exact schedulability test make the following
+assumptions:
+* All the tasks are periodic
+* Tasks are scheduled according to RMS
+* All tasks are independent and do not share resources (data)
+* Tasks do not self-suspend during their execution
+* Scheduler overhead (context-switch) is negligible
+
+The algorithm:
+* Suppose we have n tasks, and we pick a task, say i, to see if it is schedulable.
+* We initialize the testing by assuming all the higher priority tasks from 1 to i-1 will
+only preempt task i once.
+ * Hence, the initially presumed finishing time for task i is just the sum of C_1 to C_i, which we call r_0.
+* We now check the actual arrival of higher priority tasks within the duration r_0 and
+then presume that it will be all the preemption task i will experience. So we
+compute r_1 under this assumption.
+* We will repeat this process until one of the two conditions occur:
+ * 1. The rn eventually exceeds the deadline of task i. In this case we terminate
+the iteration process and conclude that task i is not schedulable.
+ * 2. The series rn converges to a fixed point (i.e., it stops increasing). If this fixed
+point is less than or equal to the deadline, then the task is schedulable and we
+terminate the schedulability test.
+
+# Lec18
