@@ -1230,7 +1230,7 @@ Table 5.7 Memory Access Instructions for the Floating Point Unit
 | Multiple data | `VLDM` | `VSTM` |
 | Stack operations | `VPOP` | `VPUSH` |
 
-#### Immediate offset (pre-index)
+#### Immediate offset (pre-index: index manipulation first, get data second)
 Table 5.8 Memory Access Instructions with Immediate Offset
 
 | Example of Pre-index Accesses Note: the #offset field is optional | Description |
@@ -1267,5 +1267,90 @@ Table 5.9 Memory Access Instructions with Immediate Offset and Write Back
 
 *16-bit versions of these instructions only support low registers
 (R0-R7) and do not provide write-back.
+
+Table 5.10 Memory Access Instructions for Floating Point Unit
+
+|Examples Note: the #offset field is optional | Description |
+|:-------------------------------------------:|:-----------:|
+| `VLDR.32 Sn, [Rn, #offset]` | Read single-precision data from memory to single-precision register Sn |
+| `VLDR.64 Dn, [Rn, #offset]` | Read double-precision data from memory to double-precision register Dn |
+| `VSTR.32 Sn, [Rn, #offset]` | Write single-precision data from single-precision register Sn to memory |
+| `VSTR.64 Dn, [Rn, #offset]` | Write double-precision data from double precision register Dn to memory |
+
+### PC-related addressing (Literal)
+This is commonly needed for loading immediate values
+into a register, also known as literal pool accesses.
+
+Table 5.11 Memory Access Instructions with PC Related Addressing
+
+| Example of Literal Read | Description |
+|:-----------------------:|:-----------:|
+|`LDRB Rt,[PC, #offset]` | Load unsigned byte into `Rt` using PC offset |
+|`LDRSB Rt,[PC, #offset]` | Load and signed extend a byte data into `Rt` using PC offset |
+|`LDRH Rt,[PC, #offset]` | Load unsigned half-word into `Rt` using PC offset |
+|`LDRSH Rt,[PC, #offset]` | Load and signed extend a half-word data into `Rt` using PC offset |
+|`LDR Rt, [PC, #offset]` | Load a word data into `Rt` using PC offset |
+|`LDRD Rt,Rt2,[PC, #offset]` | Load a double-word into `Rt` and `Rt2` using PC offset |
+
+Table 5.12 Floating Point Unit Memory Access Instructions with PC-related Addressing
+
+|Example of Literal Read | Description |
+|:----------------------:|:-----------:|
+|`VLDR.32 Sd,[PC, #offset]` | Load single-precision data into single-precision register Sd using PC offset |
+|`VLDR.64 Dd,[PC, #offset]` | Load double-precision data into doubleprecision register Dd using PC offset |
+
+### Register offset (pre-index)
+This is often used in the processing
+of data arrays where the address is a combination of a base address and an offset
+calculated from an index value.
+
+e.g.:
+```
+STR R5, [R0,R7] ; Write R5 into memory[R0+R7]
+LDR R3, [R0, R2, LSL #2] ; Read memory[R0+(R2 << 2)] into R3
+```
+
+Table 5.13 Memory Access Instructions with Register Offset
+
+|Example of Register Offset Accesses | Description|
+|:----------------------------------:|:----------:|
+|`LDRB Rd, [Rn, Rm{, LSL #n}]` | Read byte from memory location `Rn + (Rm << n)`|
+|`LDRSB Rd, [Rn, Rm{, LSL #n}]` | Read and signed extend byte from memory location `Rn + (Rm << n)`|
+|`LDRH Rd, [Rn, Rm{, LSL #n}]` | Read half-word from memory location `Rn + (Rm << n)`|
+|`LDRSH Rd, [Rn, Rm{, LSL #n}]` | Read and signed extended half-word from memory location `Rn + (Rm << n)`|
+|`LDR Rd, [Rn, Rm{, LSL #n}]` | Read word from memory location `Rn + (Rm << n)`|
+|`STRB Rd, [Rn, Rm{, LSL #n}]` | Store byte to memory location `Rn + (Rm << n)`|
+|`STRH Rd, [Rn, Rm{, LSL #n}]` | Store half-word to memory location `Rn + (Rm << n)`|
+|`STR Rd, [Rn, Rm{, LSL #n}]` | Store word to memory location `Rn + (Rm << n)`|
+
+### Post-index: get data first, index manipulation second
+The offset is not used during the memory access
+* only to update the address register
+
+e.g.:
+`LDR R0, [R1], #offset ; Read memory[R1], then R1 updated to R1+offset`
+
+The post-index address mode can be very useful for processing data in an array.
+As soon as an element in the array is accessed, the address register can be adjusted to
+the next element automatically to save code size and execution time.
+
+Table 5.14 Memory Access Instructions with Post-Indexing
+
+| Example of Post Index Accesses | Description |
+|:------------------------------:|:-----------:|
+|`LDRB Rd,[Rn], #offset` | Read byte from memory[Rn] to Rd, then update Rn to `Rn+offset`|
+|`LDRSB Rd,[Rn], #offset` | Read and signed extended byte from memory[Rn] to Rd, then update Rn to `Rn+offset`|
+|`LDRH Rd,[Rn], #offset` | Read half-word from memory[Rn] to Rd, then update Rn to `Rn+offset`|
+|`LDRSH Rd,[Rn], #offset` | Read and signed extended half-word from memory [Rn] to Rd, then update Rn to `Rn+offset`|
+|`LDR Rd,[Rn], #offset` | Read word from memory[Rn] to Rd, then update Rn to `Rn+offset`|
+|`LDRD Rd1,Rd2,[Rn], #offset` | Read double-word from memory[Rn] to Rd1, Rd2, then update Rn to `Rn+offset`|
+|`STRB Rd,[Rn], #offset` | Store byte to memory[Rn] then update Rn to `Rn+offset`|
+|`STRH Rd,[Rn], #offset` | Store half-word to memory[Rn] then update Rn to `Rn+offset`|
+|`STR Rd,[Rn], #offset` | Store word to memory[Rn] then update Rn to `Rn+offset` |
+|`STRD Rd1,Rd2,[Rn], #offset` | Store double-word to memory[Rn] then update Rn to `Rn+offset`|
+
+* post-index instructions cannot be used with `R15(PC)` or `R14(SP)`.
+* The post-index memory access instructions are 32-bit. 
+* The offset value can be positive or negative.
 
 
