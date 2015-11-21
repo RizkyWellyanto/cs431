@@ -1,4 +1,4 @@
-# Chapter 1: Introduction to ARM Cortex-M Processors
+# Chap 1: Introduction to ARM Cortex-M Processors
 
 The ISA in Cortex-M: **Thumb ISA**
 * based on **Thumb-2** technology which supports a mixture of 16-bit and 32-bit instructions.
@@ -87,7 +87,7 @@ different subsets of the Thumb ISA.
 
 ## Processor naming
 
-# Chapter 2: Introduction to Embedded Software Development
+# Chap 2: Introduction to Embedded Software Development
 Typically, only 10% of the silicon die is occupied by the ARM processor.
 To use a Cortex-M microcontroller, we only need to understand:
 * the processors, e.g. how to use the interrupt features (read this book).
@@ -359,7 +359,7 @@ handling.
  
 You can download the latest version of the CMSIS source package from [arm.com](http://www.arm.com/cmsis).
 
-# Chapter 3: Techinical Overview
+# Chap 3: Techinical Overview
 
 ## General information
 
@@ -448,7 +448,7 @@ By default the vector table is located at the beginning
 of the memory space (address 0x0), but the vector table offset can be changed at
 runtime if needed.
 
-# Chapter 4: Architecture
+# Chap 4: Architecture
 Both ARMv7-M (Cortex-M3) and ARMv7E-M (Cortex-M4) features are documented in the same architecture specification document:
 *the ARMv7-M Architecture Reference Manual*
 
@@ -798,7 +798,7 @@ It is used in saturation arithmetic instructions (e.g. `QADD16`). It is set when
 ![qbit](https://cloud.githubusercontent.com/assets/14265605/11200475/24dca6d4-8c9c-11e5-9bd4-61f74955ebab.png)
 
 ### GE (Greater-Equal) bits
-4-bit filed in Cortex-M4 only. It is used by SIMD operations. [Chapter 5]() has details.
+4-bit filed in Cortex-M4 only. It is used by SIMD operations. [Chap 5]() has details.
 
 In most cases, each bit represents positive or overflow of
 SIMD operations for each byte.
@@ -971,7 +971,7 @@ external memory for the stack:
 ![initial-stack-pointer](https://cloud.githubusercontent.com/assets/14265605/11202751/2c0ac99e-8cb1-11e5-9cb1-a60da827f499.png)
 * note that the LSB of the vector in 0x00000004 is 1 to indicate the Thumb code.
 
-# Chapter 5: Instruction Set
+# Chap 5: Instruction Set
 ![isa](https://cloud.githubusercontent.com/assets/14265605/11278044/d20624b6-8eae-11e5-94fd-a7217e5ad1cd.png)
 
 When an operation can be carried out in 16-bit, the compiler will normally
@@ -1204,6 +1204,19 @@ in some cases the `MOVW` + `MOWT` method can result in faster code if a
 system-level cache is used and if the `LDR` resulted in a data cache miss.
 
 ### Memory access 
+
+Table 5.6 Memory Access Instructions for Various Data Sizes
+
+| Data Type | Load (Read from Memory) | Store (Write to Memory) |
+|:---------:|:-----------------------:|:-----------------------:|
+| 8-bit unsigned | LDRB | STRB |
+| 8-bit signed | LDRSB | STRB |
+| 16-bit unsigned | LDRH | STRH |
+| 16-bit signed | LDRSH | STRH |
+| 32-bit | LDR | STR |
+| Multiple 32-bit | LDM | STM |
+| Double-word (64-bit) | LDRD | STRD |
+| Stack operations (32-bit) | POP | PUSH |
 
 
 
