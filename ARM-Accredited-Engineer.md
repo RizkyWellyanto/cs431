@@ -1230,6 +1230,7 @@ Table 5.7 Memory Access Instructions for the Floating Point Unit
 | Multiple data | `VLDM` | `VSTM` |
 | Stack operations | `VPOP` | `VPUSH` |
 
+#### Immediate offset (pre-index)
 Table 5.8 Memory Access Instructions with Immediate Offset
 
 | Example of Pre-index Accesses Note: the #offset field is optional | Description |
@@ -1247,9 +1248,24 @@ Table 5.8 Memory Access Instructions with Immediate Offset
 
 * Addressing with an offset is called *Pre-index Access Mode*: `LDRB R0, [R1, #0x3] ; Read a byte value from address R1+0x3, and store the read data in R0.`.
   * The offset value can be positive or negative.
+  * can do *write-back* with `!`: `LDR R0, [R1, #0x8]! ; After the access to memory[R1+0x8], R1 is updated to R1+0x8`
 
+Table 5.9 Memory Access Instructions with Immediate Offset and Write Back
 
+|Example of Pre-index with Write Back Note: the #offset field is optional | Description |
+|:-----------------------------------------------------------------------:|:-----------:|
+|`LDRB Rd, [Rn, #offset]!` | Read byte with write back |
+|`LDRSB Rd, [Rn, #offset]!`| Read and signed extend byte with write-back |
+|`LDRH Rd, [Rn, #offset]!` | Read half-word with write back |
+|`LDRSH Rd, [Rn, #offset]!`| Read and signed extended half-word with write-back |
+|`LDR Rd, [Rn, #offset]!` | Read word with write back |
+|`LDRD Rd1,Rd2, [Rn, #offset]!` | Read double-word with write back |
+|`STRB Rd, [Rn, #offset]!` | Store byte to memory with write back |
+|`STRH Rd, [Rn, #offset]!` | Store half-word to memory with write back |
+|`STR Rd, [Rn, #offset]!` | Store word to memory with write back|
+|`STRD Rd1,Rd2, [Rn, #offset]!` | Store double-word to memory with write back|
 
-
+*16-bit versions of these instructions only support low registers
+(R0-R7) and do not provide write-back.
 
 
