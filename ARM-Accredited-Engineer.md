@@ -1353,4 +1353,9 @@ Table 5.14 Memory Access Instructions with Post-Indexing
 * The post-index memory access instructions are 32-bit. 
 * The offset value can be positive or negative.
 
+### Multiple load and mutiple store
+One of the key advantages of the ARM architecture is that it allows you to read or
+write multiple data that are contiguous in memory.
+
+
 
