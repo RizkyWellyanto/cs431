@@ -14,7 +14,7 @@ CS431 at the University of Illinois at Urbana-Champaign, taught by [Dr. Lui Sha]
 * Real-Time Networking
 
 # Lab work
-10 individual labs amount to a full-fledged embedded control system: [The AmazingBallSystem]().
+10 individual labs amount to a full-fledged embedded control system: [The AmazingBallSystem](https://github.com/bo-rc/AmazingBallSystem).
 * The hardware: 
   * a linux work station
   * an oscilloscope
