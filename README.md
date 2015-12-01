@@ -10,7 +10,7 @@ CS431 at the University of Illinois at Urbana-Champaign, taught by [Dr. Lui Sha]
 * Task Scheduling
 * Priority Servers
 * Resource Access Protocols
-* Real-Time Operation Systems
+* Real-Time Operating Systems
 * Real-Time Networking
 
 # Lab work
