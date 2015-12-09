@@ -707,3 +707,25 @@ point is less than or equal to the deadline, then the task is schedulable and we
 terminate the schedulability test.
 
 # Lec18
+**Priority Inversion**: When a high priority task is delayed/blocked by lower priority tasks.
+* during synchronization of using `mutex`
+
+**Unbounded Priority Inversion**: When the duration of *priority inversion* is not bounded by a function of the duration of critical sections.
+
+**Critical instant theorem**: If a task meets its first deadline when *all higher priority tasks* are started *at the same time*, then this task’s future deadlines will always be met. The exact test for a task checks if this task can meet its first deadline.
+* holds only for fixed priority scheduling
+
+**It is a common mistake** to assume that if a higher priority task is not
+schedulable so are the lower priority tasks.
+
+## Adding Context Switch Time
+S: amount of time to deschedule the current executing task and schedule a new one.
+* higher-priority task can cause at-most (worst case senario) 2 context switches in its period to a lower-priority task.
+    * this happens when the higher-priority finishes before the deadline of the lower-priority task.
+        * Switch out of CPU due to preemption: S<sub>1</sub> + Switch back to CPU due to finished preemption: S<sub>2</sub>
+            * The process is symmetrical so the cost of context switch at worst case is: **2S**
+
+
+
+
+
