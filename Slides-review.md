@@ -718,14 +718,30 @@ terminate the schedulability test.
 **It is a common mistake** to assume that if a higher priority task is not
 schedulable so are the lower priority tasks.
 
-## Adding Context Switch Time
+## Modeling Context Switch Time
 S: amount of time to deschedule the current executing task and schedule a new one.
 * higher-priority task can cause at-most (worst case senario) 2 context switches in its period to a lower-priority task.
     * this happens when the higher-priority finishes before the deadline of the lower-priority task.
         * Switch out of CPU due to preemption: S<sub>1</sub> + Switch back to CPU due to finished preemption: S<sub>2</sub>
             * The process is symmetrical so the cost of context switch at worst case is: **2S**
 
+* Just replace `C<sub>i</sub> = (C<sub>i</sub> + 2S)` in both the UB test and exact test.
 
+## Modeling Pre-period Deadlines
+The pre-period deadline of a task does not affect the schedulability of other tasks!
+
+When the task has a deadline: `D < P`
+* ***UB test***: it is *as if* the task has a longer execution time:
+    * but the period is NOT changed:
+        * just replace `C<sub>i</sub> = (C<sub>i</sub> + (P-D))` for this task
+    * the `(P-D)` time does not occupy CPU, so this effect is a *what-if* analysis only for this task: Other tasks won't be affected.
+    * now you need to check all N equations of adding each task to check the schedulability, since the pre-period deadline is *local* to the specific task.
+        * w/o the *local*-only effect, just 1 equation including all tasks will be enough to check the schedulability of the set.
+        * you have to do this:
+
+![ub-test-pre-period-deadline](https://cloud.githubusercontent.com/assets/14265605/11698149/edefbf5a-9e82-11e5-88d3-4ff2be330d22.png)
+
+* ***Exact test***: it is as if the task has a short
 
 
 
