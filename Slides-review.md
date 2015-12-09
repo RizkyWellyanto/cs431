@@ -718,7 +718,7 @@ terminate the schedulability test.
 **It is a common mistake** to assume that if a higher priority task is not
 schedulable so are the lower priority tasks.
 
-## Modeling Context Switch Time
+## Modeling Context Switch Time in RM
 S: amount of time to deschedule the current executing task and schedule a new one.
 * higher-priority task can cause at-most (worst case senario) 2 context switches in its period to a lower-priority task.
     * this happens when the higher-priority finishes before the deadline of the lower-priority task.
@@ -727,7 +727,7 @@ S: amount of time to deschedule the current executing task and schedule a new on
 
 * Just replace `C<sub>i</sub> = (C<sub>i</sub> + 2S)` in both the UB test and exact test.
 
-## Modeling Pre-period Deadlines
+## Modeling Pre-period Deadlines in RM
 The pre-period deadline of a task does not affect the schedulability of other tasks!
 
 When the task has a deadline: `D < P`
@@ -741,7 +741,52 @@ When the task has a deadline: `D < P`
 
 ![ub-test-pre-period-deadline](https://cloud.githubusercontent.com/assets/14265605/11698149/edefbf5a-9e82-11e5-88d3-4ff2be330d22.png)
 
-* ***Exact test***: it is as if the task has a short
+* ***Exact test***: 
+    * just move the **deadline** from `P` to `D`
+    * **period** not changed.
+    * still local to this task: analysis of other tasks not changed.
+
+# Lec 19
+
+## Modeling Blocking time in RM
+*Preemption*: short-period tasks delays long-period tasks.
+*Blocking*: long-period tasks delays short-period tasks.
+* this could happen, e.g.
+    * the data I/O of a long-period tasks could run at the top priority, to reduce jitter, and could block.
+
+In both ***UB test*** and ***Exact test***, just add blocking time `B` to `C`.
+* this effect is also ***local***.
+e.g.:
+
+![ub-test-blocking](https://cloud.githubusercontent.com/assets/14265605/11699051/d10a7376-9e87-11e5-85d0-99c25207021b.png)
+
+## Aperiodic tasks
+**Aperiodic task**: runs at irregular intervals
+
+*Rate monotonic* scheduling is a *periodic* framework. To handle aperiodics, we
+must ***convert*** the aperiodic event service into a periodic framework.
+* Except in the case of using interrupt handler to serve aperiodics
+
+The basic idea is to *periodically allocate CPU cycles* to each stream of aperiodic requests. 
+* This CPU allocation is called ***aperiodic server**, we will cover:
+    * ***Polling server***
+    * ***Sporadic server***
+
+### Polling server
+behaves just like a periodic task with `C = budget`, `P = period`.
+The **UB test** and **Exact test** can be applied as if the server is another periodic task.
+
+Service delay of a polling server is, on average, roughly half of the server period.
+
+# Lec 20
+
+
+
+
+
+
+
+
 
 
 
