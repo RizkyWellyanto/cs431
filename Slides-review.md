@@ -835,6 +835,8 @@ A task with period P and execution time C can be *transformed* schedulable by us
 * when *idle* (including when budget is exhausted), decide how much to refill
     * Replenishment Amount: equal to the amount consumed during *active*, before *idle* (including when budget is exhausted).
 
+![lect20_aperiodic](https://cloud.githubusercontent.com/assets/14265605/11731371/6c808d80-9f60-11e5-93ef-0a11dcb65fb9.png)
+
 #### Schedulability Analysis of SS
 SS behaves like a regular periodic task. Nothing changes.
 
