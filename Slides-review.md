@@ -780,6 +780,40 @@ Service delay of a polling server is, on average, roughly half of the server per
 
 # Lec 20
 
+## Net Utilization and Overhead
+
+* An instance of a periodic task can cause at most 2 context switching (2S)
+* In the worst case, every instance of a task causes 2 context swithches
+
+Under worst case assumption:
+The net processor utilization(NPU) is: `C<sub>1</sub>/P<sub>1</sub> + C<sub>2</sub>/P<sub>2</sub> + ... + C<sub>n</sub>/P<sub>n</sub>`
+
+The constext switching overhead (CSO) is: `2S/P<sub>1</sub> + 2S/P<sub>2</sub> + ... + 2S/P<sub>n</sub>`
+
+Total utilization(TU) is: `(C<sub>1</sub>+2S)/P<sub>1</sub> + (C<sub>2</sub>+2S)/P<sub>2</sub> + ... + (C<sub>n</sub>+2S)/P<sub>n</sub>`
+
+
+
+
+
+## Period Transformation
+An useful technique to ensure:
+* stability under transient overload
+* improve system schedulability
+
+Use **Period Transformation** to improve processor utilization:
+
+![period-transformation](https://cloud.githubusercontent.com/assets/14265605/11728143/b257b4ae-9f4d-11e5-88a3-090acc9152bc.png)
+
+## Implementing Period Transformation
+It is undesirable to slice up the
+
+
+
+
+
+
+## Sporadic Server
 
 
 
