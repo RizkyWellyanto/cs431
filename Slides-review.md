@@ -840,6 +840,8 @@ A task with period P and execution time C can be *transformed* schedulable by us
 #### Schedulability Analysis of SS
 SS behaves like a regular periodic task. Nothing changes.
 
+# Lec 21
+
 
 
 
