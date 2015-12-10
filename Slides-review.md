@@ -803,25 +803,40 @@ Use **Period Transformation** to improve processor utilization:
 
 In practice, we do not end up with an harmonic task set.
 * we need to use *binary search* and the *exact test*.
-    * use C<sub>i</sub><sup>*</sup> = (C<sub>i</sub>/2 + 2S) and P<sub>i</sub><sup>*</sup> = P<sub>i</sub>/2
+    * use C<sub>i</sub><sup>\*</sup> = (C<sub>i</sub>/2 + 2S) and P<sub>i</sub><sup>\*</sup> = P<sub>i</sub>/2
     * use exact test to accept/reject the above update
 
-
 ## Implementing Period Transformation
-It is undesirable to slice up the
+It is undesirable to slice up the program code.
+* we should separate timing concerns from functional concerns
 
-
-
-
-
+A task with period P and execution time C can be *transformed* schedulable by using an aperiodic server (polling or sporadic) with budget C/2 and period P/2.
 
 ## Sporadic Server
+* *Polling* periodically replenishes its capacity at the beginning of each server period.
+* *SS* replenishes only after it has been consumed.
 
+* SS can be treated as if it is a periodic task.
+* SS has better response time.
+    * SS can defer its execution and preserve its budget even if no aperiodic requests are pending. This allows SS to achieve better response time compared to Polling Server.
+    * If SS has the highest priority in the system, it can provide a service delay almost equivalent to an interrupt handler but w/o causing the deadline miss of other tasks.
 
+### SS rules/algorithm
+* SS is *active* when it is
+    * executing or
+    * higher-priority job than SS is executing
+        * remains *active* even when it is preempted.
+* *idle*: not *active*
+* when *active*, decide when to refill the budget
+    * Replenishment Time: 
+        * T<sub>A</sub>: the time SS becomes *active*
+        * P<sub>s</sub>: SS's period
+        * Refill at time: T<sub>refill</sub> = T<sub>A</sub> + P<sub>s</sub>
+* when *idle* (including when budget is exhausted), decide how much to refill
+    * Replenishment Amount: equal to the amount consumed during *active*, before *idle* (including when budget is exhausted).
 
-
-
-
+#### Schedulability Analysis of SS
+SS behaves like a regular periodic task. Nothing changes.
 
 
 
