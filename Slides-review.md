@@ -792,10 +792,6 @@ The constext switching overhead (CSO) is: 2S/P<sub>1</sub> + 2S/P<sub>2</sub> + 
 
 Total utilization(TU) is: (C<sub>1</sub>+2S)/P<sub>1</sub> + (C<sub>2</sub>+2S)/P<sub>2</sub> + ... + (C<sub>n</sub>+2S)/P<sub>n</sub>
 
-
-
-
-
 ## Period Transformation
 An useful technique to ensure:
 * stability under transient overload
@@ -804,6 +800,12 @@ An useful technique to ensure:
 Use **Period Transformation** to improve processor utilization:
 
 ![period-transformation](https://cloud.githubusercontent.com/assets/14265605/11728143/b257b4ae-9f4d-11e5-88a3-090acc9152bc.png)
+
+In practice, we do not end up with an harmonic task set.
+* we need to use *binary search* and the *exact test*.
+    * use C<sub>i</sub><sup>*</sup> = (C<sub>i</sub>/2 + 2S) and P<sub>i</sub><sup>*</sup> = P<sub>i</sub>/2
+    * use exact test to accept/reject the above update
+
 
 ## Implementing Period Transformation
 It is undesirable to slice up the
