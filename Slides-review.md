@@ -786,11 +786,11 @@ Service delay of a polling server is, on average, roughly half of the server per
 * In the worst case, every instance of a task causes 2 context swithches
 
 Under worst case assumption:
-The net processor utilization(NPU) is: `C<sub>1</sub>/P<sub>1</sub> + C<sub>2</sub>/P<sub>2</sub> + ... + C<sub>n</sub>/P<sub>n</sub>`
+The net processor utilization(NPU) is: C<sub>1</sub>/P<sub>1</sub> + C<sub>2</sub>/P<sub>2</sub> + ... + C<sub>n</sub>/P<sub>n</sub>
 
-The constext switching overhead (CSO) is: `2S/P<sub>1</sub> + 2S/P<sub>2</sub> + ... + 2S/P<sub>n</sub>`
+The constext switching overhead (CSO) is: 2S/P<sub>1</sub> + 2S/P<sub>2</sub> + ... + 2S/P<sub>n</sub>
 
-Total utilization(TU) is: `(C<sub>1</sub>+2S)/P<sub>1</sub> + (C<sub>2</sub>+2S)/P<sub>2</sub> + ... + (C<sub>n</sub>+2S)/P<sub>n</sub>`
+Total utilization(TU) is: (C<sub>1</sub>+2S)/P<sub>1</sub> + (C<sub>2</sub>+2S)/P<sub>2</sub> + ... + (C<sub>n</sub>+2S)/P<sub>n</sub>
 
 
 
