@@ -914,12 +914,26 @@ C(S<sub>k</sub>)=max<sub>i</sub>(prio<sub>i</sub> | task T<sub>i</sub> that uses
 
 ![blockingtime-semaphores](https://cloud.githubusercontent.com/assets/14265605/11733458/1e5c299e-9f73-11e5-8053-d837c8db42b2.png)
 
-****Algorithm***:
+* ***Algorithm to calculate Blocking time under PIP***:
 
 ![example](https://cloud.githubusercontent.com/assets/14265605/11733511/a3577afe-9f73-11e5-9f17-4ad486bbf993.png)
 
 # Lec22 PCP (Priority Ceiling Protocol)
 PCP can prevent deadlock problem.
+PCP avoids multiple blocking (chained blocking).
+
+*Key idea*: a job J is allowed to enter a critical section only if its priority is higher than all priority ceilings of the semaphores currently locked by jobs other than J.
+
+## PCP (Priority Ceiling Protocol):
+* each semaphore is assigned a static priority ceiling: C(S<sub>k</sub>).
+* the highest prioirity job is assigned the processor.
+* to enter a critical section guarded by semaphore S<sub>k</sub>, J must have a priority higher than C(S<sup>\*</sup>).
+    * S<sup>\*</sup> is the semaphore with the highest priority ceiling among all semaphores currently locked by jobs other that J
+    * let's say S<sup>\*</sup> is held by J<sup>\*</sup>. 
+        * we now say J is blocked on semaphore S<sup>\*</sup> by J<sup>\*</sup>.
+* when a job J is blocked by J<sup>\*</sup>:
+    * J<sup>\*</sup> inherits J's priority.
+* when the semaphore is freed by J<sup>\*</sup>, J<sup>\*</sup>'s priority restores.
 
 
 
