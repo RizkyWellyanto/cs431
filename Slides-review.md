@@ -840,7 +840,31 @@ A task with period P and execution time C can be *transformed* schedulable by us
 #### Schedulability Analysis of SS
 SS behaves like a regular periodic task. Nothing changes.
 
-# Lec 21
+# Lec 21 Unbounded Priority Inversion, Priority Inheritance
+
+## handling soft reaf time requests
+*Soft*: average service time matters.
+    * *Hard*: deadline matters.
+
+Basic tools to estimate the average response time:
+* queueing theory
+* simulation
+
+**M/M/1 queue**:
+* assume Poisson arrival with average arrival *rate* `r`.
+    * ***inter-arrival time***: `1/r`
+* assume exponential service *rate*: `u`
+    * ***service time***: `1/u`.
+    * e.g. `1/u = 0.01 sec`
+* `CPU_workload` is: `service time/inter-arrival time`, i.e. `r/u`
+* `server_bandwidth` (e.g. an *SS*) is: U<sub>s</sub>=C<sub>s</sub>/P<sub>s</sub>
+* `server_workload` is: `p = CPU_workload/server_bandwidth`
+* ***average response time*** (queue waiting time + service time): 
+    * `response time = service time/(1-server_workload)`:
+        * `w = (1/u)(1-p)`
+
+
+
 
 
 
