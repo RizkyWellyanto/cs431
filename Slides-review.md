@@ -726,7 +726,7 @@ S: amount of time to deschedule the current executing task and schedule a new on
         * Switch out of CPU due to preemption: S<sub>1</sub> + Switch back to CPU due to finished preemption: S<sub>2</sub>
             * The process is symmetrical so the cost of context switch at worst case is: **2S**
 
-* Just replace `C<sub>i</sub> = (C<sub>i</sub> + 2S)` in both the UB test and exact test.
+* Just replace C<sub>i</sub> = (C<sub>i</sub> + 2S) in both the UB test and exact test.
 
 ## Modeling Pre-period Deadlines in RM
 The pre-period deadline of a task does not affect the schedulability of other tasks!
