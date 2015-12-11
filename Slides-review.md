@@ -847,7 +847,7 @@ SS behaves like a regular periodic task. Nothing changes.
 
 ## handling soft real time requests
 *Soft*: average service time matters.
-    * *Hard*: deadline matters.
+* *Hard*: deadline matters.
 
 Basic tools to estimate the average response time:
 * queueing theory
