@@ -919,6 +919,8 @@ C(S<sub>k</sub>)=max<sub>i</sub>(prio<sub>i</sub> | task T<sub>i</sub> that uses
 ![example](https://cloud.githubusercontent.com/assets/14265605/11733511/a3577afe-9f73-11e5-9f17-4ad486bbf993.png)
 
 # Lec22 PCP (Priority Ceiling Protocol)
+PCP can prevent deadlock problem.
+
 
 
 
