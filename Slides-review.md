@@ -602,7 +602,7 @@ Signal handlers do not run in multitasking: there is just one single process goi
 
 1. Schedulable utilization
 
-2. Worst-case response time for each of tasks
+2. Worst-case response time for ***each*** of tasks
 
 3. Stability (getting critical tasks done)
 
