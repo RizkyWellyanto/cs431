@@ -734,7 +734,7 @@ The pre-period deadline of a task does not affect the schedulability of other ta
 When the task has a deadline: `D < P`
 * ***UB test***: it is *as if* the task has a longer execution time:
     * but the period is NOT changed:
-        * just replace `C<sub>i</sub> = (C<sub>i</sub> + (P-D))` for this task
+        * just replace C<sub>i</sub> = (C<sub>i</sub> + (P-D)) for this task
     * the `(P-D)` time does not occupy CPU, so this effect is a *what-if* analysis only for this task: Other tasks won't be affected.
     * now you need to check all N equations of adding each task to check the schedulability, since the pre-period deadline is *local* to the specific task.
         * w/o the *local*-only effect, just 1 equation including all tasks will be enough to check the schedulability of the set.
