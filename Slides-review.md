@@ -919,8 +919,6 @@ C(S<sub>k</sub>)=max<sub>i</sub>(prio<sub>i</sub> | task T<sub>i</sub> that uses
 ![example](https://cloud.githubusercontent.com/assets/14265605/11733511/a3577afe-9f73-11e5-9f17-4ad486bbf993.png)
 
 # Lec22 PCP (Priority Ceiling Protocol)
-PCP can prevent deadlock problem.
-PCP avoids multiple blocking (chained blocking).
 
 *Key idea*: a job J is allowed to enter a critical section only if its priority is higher than all priority ceilings of the semaphores currently locked by jobs other than J.
 
@@ -928,16 +926,45 @@ PCP avoids multiple blocking (chained blocking).
 * each semaphore is assigned a static priority ceiling: C(S<sub>k</sub>).
 * the highest prioirity job is assigned the processor.
 * to enter a critical section guarded by semaphore S<sub>k</sub>, J must have a priority higher than C(S<sup>\*</sup>).
-    * S<sup>\*</sup> is the semaphore with the highest priority ceiling among all semaphores currently locked by jobs other that J
+    * S<sup>\*</sup> is the semaphore with the highest priority ceiling among all semaphores currently locked by jobs ***other that*** J
     * let's say S<sup>\*</sup> is held by J<sup>\*</sup>. 
         * we now say J is blocked on semaphore S<sup>\*</sup> by J<sup>\*</sup>.
 * when a job J is blocked by J<sup>\*</sup>:
     * J<sup>\*</sup> inherits J's priority.
-* when the semaphore is freed by J<sup>\*</sup>, J<sup>\*</sup>'s priority restores.
+* when the semaphore is freed by J<sup>\*</sup>, J<sup>\*</sup>'s priority updates to the Ceiling of semaphores it currently hold or restores to its normal if it no longer holds any semaphore.
 
+PCP can prevent deadlock problem:
 
+![lect22_pcp_sol](https://cloud.githubusercontent.com/assets/14265605/11736433/f18150ae-9f93-11e5-8da4-5ea9f0745318.png)
 
+PCP avoids multiple blocking (chained blocking):
 
+![pcp](https://cloud.githubusercontent.com/assets/14265605/11736482/852525b0-9f94-11e5-818b-38a9fa67aff3.png)
+* under PCP, a job J can be blocked for at most the duration of the longest outermost critical section among those that can block J.
+
+* ***Algorithm to calculate Blocking time under PCP*** (much easier than PIP):
+
+![blockingtime-pcp](https://cloud.githubusercontent.com/assets/14265605/11736555/497d65ee-9f95-11e5-8cca-67e9008db7db.png)
+
+# Lec 23 Real-time networks
+
+**FDDI** (Fiber Distributed Data Interface)
+* stations/nodes are distributed in a ring network.
+* *TTRT* (Target Token Rotation Time) = W(walk time) + H<sub>1</sub> + H<sub>2</sub> + ... + H<sub>n</sub> (H: hold time)
+* *Hold time* is used for transimission.
+* *Walk time* is an overhead.
+* *Total Utilization of node i*: U<sub>i</sub> = U<sub>i1</sub> + U<sub>i2</sub> + ... + U<sub>in</sub>
+
+*Proportional allocation algorithm*: makes hold time at each node proportional to its bandwidth requirements:
+* initial Hold time: H<sub>i</sub>=(TTRT - W)*(U<sub>i</sub>/U)
+    * U<sub>i</sub>: the total utilization of node i
+    * U: total bandwidth of the ring
+* if a particular node cannot schedule all its msg while others can, adjust H<sub>i</sub>
+
+**Schedulability Analysis**
+Transform node tasks to an equivalent periodic task set (under worst-case scenario):
+{node's original tasks, TTRT task}
+* TTRT task = (C<sub>TTRT</TTRT>=(TTRT - H<sub>i</sub>), T<sub>TTRT</sub>)
 
 
 
