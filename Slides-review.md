@@ -845,7 +845,7 @@ SS behaves like a regular periodic task. Nothing changes.
 
 # Lec 21 Unbounded Priority Inversion, Priority Inheritance
 
-## handling soft reaf time requests
+## handling soft real time requests
 *Soft*: average service time matters.
     * *Hard*: deadline matters.
 
