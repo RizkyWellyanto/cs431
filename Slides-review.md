@@ -696,12 +696,12 @@ The algorithm:
 * Suppose we have n tasks, and we pick a task, say i, to see if it is schedulable.
 * We initialize the testing by assuming all the higher priority tasks from 1 to i-1 will
 only preempt task i once.
- * Hence, the initially presumed finishing time for task i is just the sum of C_1 to C_i, which we call r_0.
-* We now check the actual arrival of higher priority tasks within the duration r_0 and
+ * Hence, the initially presumed finishing time for task i is just the sum of C<sub>1</sub> to C<sub>i</sub>, which we call r<sub>0</sub>.
+* We now check the actual arrival of higher priority tasks within the duration r<sub>0</sub> and
 then presume that it will be all the preemption task i will experience. So we
-compute r_1 under this assumption.
+compute r<sub>1</sub> under this assumption.
 * We will repeat this process until one of the two conditions occur:
- * 1. The rn eventually exceeds the deadline of task i. In this case we terminate
+ * 1. The r<sub>n</sub> eventually exceeds the deadline of task i. In this case we terminate
 the iteration process and conclude that task i is not schedulable.
  * 2. The series rn converges to a fixed point (i.e., it stops increasing). If this fixed
 point is less than or equal to the deadline, then the task is schedulable and we
