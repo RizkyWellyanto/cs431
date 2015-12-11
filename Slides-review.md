@@ -904,7 +904,7 @@ Under worst-case scenario, a task can be blocked for the duration of min(n, m) c
 * n is the number of lower priority jobs that could block it.
 * m is the number of distinct semaphores that can be used to block it.
 
-**The ***Ceiling*** of a semaphore**:
+The ***Ceiling*** of a semaphore:
 C(S<sub>k</sub>)=max<sub>i</sub>(prio<sub>i</sub> | task T<sub>i</sub> that uses S<sub>k</sub>)
 
 **Blocking time by task**:
