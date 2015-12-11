@@ -746,6 +746,8 @@ When the task has a deadline: `D < P`
     * **period** not changed.
     * still local to this task: analysis of other tasks not changed.
 
+When the periods are harmonic, the utilization bound of all `U(n)` becomes 1.
+
 # Lec 19
 
 ## Modeling Blocking time in RM
@@ -859,10 +861,47 @@ Basic tools to estimate the average response time:
 * `CPU_workload` is: `service time/inter-arrival time`, i.e. `r/u`
 * `server_bandwidth` (e.g. an *SS*) is: U<sub>s</sub>=C<sub>s</sub>/P<sub>s</sub>
 * `server_workload` is: `p = CPU_workload/server_bandwidth`
-* ***average response time*** (queue waiting time + service time): 
+* **ON EXAM** ***average response time*** (queue waiting time + service time): 
     * `response time = service time/(1-server_workload)`:
-        * `w = (1/u)(1-p)`
+        * `w = (1/u)/(1-p)`
 
+## Priority Inversion
+When high priority task is delayed by lower priority task.
+* when the duration of priority inversion is not bounded by a function of the duration of critical sections: ***unbounded priority inversion***.
+
+![lect21_sync_sol](https://cloud.githubusercontent.com/assets/14265605/11732901/74da809a-9f6e-11e5-9b9d-a95b8726d288.png)
+
+### PIP (Priority Inheritance Protocol)
+* When a lower priority task blocks higher priority tasks during its critical section:
+    * lower priority task inherits the highest priority of all the blocked tasks.
+* When a task exits its critical section:
+    * it returns to its normally assigned priority.
+* Pirority inheritance is transitive:
+    * if a job J3 blocks a job J2, and J2 blocks a job J1, then J3 inherits the priority of J1 via J2.
+
+![lect21_sync_sol 1](https://cloud.githubusercontent.com/assets/14265605/11732978/130ad864-9f6f-11e5-8105-5e72a6179c02.png)
+
+#### Nested critical sections:
+
+![lect21_sync_sol 3](https://cloud.githubusercontent.com/assets/14265605/11733083/cebd87c8-9f6f-11e5-8c77-b515a04eac34.png)
+
+#### Transitive priority inheritance:
+
+![lect21_sync_sol 4](https://cloud.githubusercontent.com/assets/14265605/11733129/2005f070-9f70-11e5-88fb-abb07c4fc9f4.png)
+
+#### Chained Blocking Under PIP
+
+![lect21_sync_sol](https://cloud.githubusercontent.com/assets/14265605/11733223/f263a81e-9f70-11e5-8cf4-334d6b38e15b.png)
+
+PIP does not prevent *deadlock*.
+* deadlock is caused by an erroneous use of semaphores.
+* may be solved by imposing a *total ordering*.
+
+## Blocking time computation
+
+
+
+### PCP (Priority Ceiling Protocol)
 
 
 
