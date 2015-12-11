@@ -899,9 +899,26 @@ PIP does not prevent *deadlock*.
 
 ## Blocking time computation
 
+Under worst-case scenario, a task can be blocked for the duration of min(n, m) critical sentions.
+* n is the number of lower priority jobs that could block it.
+* m is the number of distinct semaphores that can be used to block it.
 
+**The ***Ceiling*** of a semaphore**:
+C(S<sub>k</sub>)=max<sub>i</sub>(prio<sub>i</sub> | task T<sub>i</sub> that uses S<sub>k</sub>)
 
-### PCP (Priority Ceiling Protocol)
+**Blocking time by task**:
+
+![blockingtime](https://cloud.githubusercontent.com/assets/14265605/11733438/ecca8f06-9f72-11e5-9ba9-11f28677abb4.png)
+
+**Blocking time by semaphores**:
+
+![blockingtime-semaphores](https://cloud.githubusercontent.com/assets/14265605/11733458/1e5c299e-9f73-11e5-8053-d837c8db42b2.png)
+
+****Algorithm***:
+
+![example](https://cloud.githubusercontent.com/assets/14265605/11733511/a3577afe-9f73-11e5-9f17-4ad486bbf993.png)
+
+# Lec22 PCP (Priority Ceiling Protocol)
 
 
 
