@@ -827,8 +827,8 @@ A task with period P and execution time C can be *transformed* schedulable by us
 ### SS rules/algorithm
 * SS is *active* when it is
     * executing or
-    * higher-priority job than SS is executing
-        * remains *active* even when it is preempted.
+    * preempted by higher-priority job than SS
+        * remains *active* even when it is preempted: to remain in a single refill later on
 * *idle*: not *active*
 * when *active*, decide when to refill the budget
     * Replenishment Time: 
