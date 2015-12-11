@@ -633,6 +633,7 @@ For periodic tasks with relative deadlines equal to their periods:
 * RM priority assignment is the optimal static priority assignment
  * No other static priority assignment can do better
  * Yet, it cannot achieve 100% CPU utilization
+    * unless harmonic periods set
 * Earliest deadline first scheduling is the optimal dynamic priority policy
  * EDF can achieve 100% CPU utilization
 
