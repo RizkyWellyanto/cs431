@@ -964,7 +964,7 @@ PCP avoids multiple blocking (chained blocking):
 **Schedulability Analysis**
 Transform node tasks to an equivalent periodic task set (under worst-case scenario):
 {node's original tasks, TTRT task}
-* TTRT task = (C<sub>TTRT</TTRT>=(TTRT - H<sub>i</sub>), T<sub>TTRT</sub>)
+* TTRT task = (C<sub>TTRT</sub>=(TTRT - H<sub>i</sub>), T<sub>TTRT</sub>)
 
 
 
