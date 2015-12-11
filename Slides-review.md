@@ -928,6 +928,7 @@ C(S<sub>k</sub>)=max<sub>i</sub>(prio<sub>i</sub> | task T<sub>i</sub> that uses
 * the highest prioirity job is assigned the processor.
 * to enter a critical section guarded by semaphore S<sub>k</sub>, J must have a priority higher than C(S<sup>\*</sup>).
     * S<sup>\*</sup> is the semaphore with the highest priority ceiling among all semaphores currently locked by jobs ***other that*** J
+        * not just consider S<sub>k</sub> which J tries to access, but all locked S.
     * let's say S<sup>\*</sup> is held by J<sup>\*</sup>. 
         * we now say J is blocked on semaphore S<sup>\*</sup> by J<sup>\*</sup>.
 * when a job J is blocked by J<sup>\*</sup>:
