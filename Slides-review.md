@@ -771,7 +771,7 @@ must ***convert*** the aperiodic event service into a periodic framework.
 * Except in the case of using interrupt handler to serve aperiodics
 
 The basic idea is to *periodically allocate CPU cycles* to each stream of aperiodic requests. 
-* This CPU allocation is called ***aperiodic server**, we will cover:
+* This CPU allocation is called **aperiodic server**, we will cover:
     * ***Polling server***
     * ***Sporadic server***
 
