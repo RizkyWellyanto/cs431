@@ -968,5 +968,13 @@ Transform node tasks to an equivalent periodic task set (under worst-case scenar
 {node's original tasks, TTRT task}
 * TTRT task = (C<sub>TTRT</sub>=(TTRT - H<sub>i</sub>), T<sub>TTRT</sub>)
 
+# Signals and Communications
+PPM-SUM, SBUS, DSM, SPI bus, I<sup>2</sup>C, UART, DMA
+
+
+
+
+
+
 
 
