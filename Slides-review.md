@@ -971,6 +971,7 @@ Transform node tasks to an equivalent periodic task set (under worst-case scenar
 # Signals and Communications
 PPM-SUM, SBUS, DSM, SPI bus, I<sup>2</sup>C, UART, DMA
 
+## [SPI](https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus) Bus (Serial Peripheral Interface Bus)
 
 
 
