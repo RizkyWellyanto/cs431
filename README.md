@@ -28,3 +28,6 @@ CS431 at the University of Illinois at Urbana-Champaign, taught by [Prof. Lui Sh
 * the [μC/OS-II](http://micrium.com/rtos/ucosii/overview/) real-time kernel is used.
 * at the end of the semester, the system will be able to do something like [this](). More importantly, the underlying source code must meet requirements of [Hard Real-Time Computing Systems](http://www.amazon.com/Hard-Real-Time-Computing-Systems-Applications/dp/1461406757/ref=sr_1_1?ie=UTF8&qid=1449008254&sr=8-1&keywords=hard+realtime+computing+system).
 * 
+
+# Github
+The repo hosts my code and notes for CS431.
