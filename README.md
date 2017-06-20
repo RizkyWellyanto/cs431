@@ -1,5 +1,5 @@
 # CS 431@UIUC
-CS431 at the University of Illinois at Urbana-Champaign, taught by [Prof. Lui Sha](http://cs.illinois.edu/directory/profile/lrs) who is famous for his contributions in [Reat-time computing systems](https://scholar.google.com/citations?user=SlXqNooAAAAJ). CS431 covers the following topics:
+CS431 at the University of Illinois at Urbana-Champaign, taught by [Prof. Lui Sha](http://cs.illinois.edu/directory/profile/lrs) who is famous for his contributions in [Real-time computing systems](https://scholar.google.com/citations?user=SlXqNooAAAAJ). CS431 covers the following topics:
 * Microcontroller Programming
 * Signal Processing
   * Fourier Analysis
